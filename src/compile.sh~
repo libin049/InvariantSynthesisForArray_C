@@ -1,6 +1,6 @@
-LLVM_SRC_PATH="$HOME/llvm3.6.2/llvm"
-LLVM_BUILD_PATH="$HOME/llvm3.6.2/build"
-LLVM_BIN_PATH="$HOME/llvm3.6.2/build/bin"
+LLVM_SRC_PATH="$HOME/llvm-3.6.2/llvm"
+LLVM_BUILD_PATH="$HOME/llvm-3.6.2/build"
+LLVM_BIN_PATH="$HOME/llvm-3.6.2/build/bin"
 z3_src_path="/home/lb/z3-master"
 z3_build_path="/home/lb/z3-master/build"
 

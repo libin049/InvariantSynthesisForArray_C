@@ -1,10 +1,20 @@
-void arrayCopy(int A[],int B[],unsigned size){
+int size;
+int row;
+int col;
+
+int d1;
+int d2;
+int d3;
+
+void arrayCopy(){
+	int A[size],B[size];
 	for(int i=0;i<size;i++){
 		A[i]=B[i];		
 	}
 }
 
-bool arrayIf(int A[],int B[],unsigned size){
+bool arrayIf(){
+	int A[size],B[size];
 	for(int i=0;i<size;i++){
 		if(A[i]==0){
 			return true;
@@ -13,7 +23,8 @@ bool arrayIf(int A[],int B[],unsigned size){
 	return false;
 }
 
-void towDarrayCopy(int** A,int** B,unsigned row,unsigned col){
+void towDarrayCopy(){
+	int A[row][col],B[row][col];
 	for(int i=0;i<row;i++){
 		for(int j=0;j<col;j++){			
 			A[i][j]=B[i][j];
@@ -21,7 +32,8 @@ void towDarrayCopy(int** A,int** B,unsigned row,unsigned col){
 	}
 }
 
-bool towDarrayIf(int** A,int** B,unsigned row,unsigned col){
+bool towDarrayIf(){
+	int A[row][col],B[row][col];
 	bool flag=false;
 	for(int i=0;i<row;i++){
 		for(int j=0;j<col;j++){	
@@ -37,7 +49,8 @@ bool towDarrayIf(int** A,int** B,unsigned row,unsigned col){
 	return flag;
 }
 
-bool towDarrayIf2(int** A,int** B,unsigned row,unsigned col){
+bool towDarrayIf2(){
+	int A[row][col],B[row][col];
 	for(int i=0;i<row;i++){
 		for(int j=0;j<col;j++){	
 			if(A[i][j]==0){
@@ -49,7 +62,8 @@ bool towDarrayIf2(int** A,int** B,unsigned row,unsigned col){
 	return false;
 }
 
-void arrayMax(int A[],unsigned size){      
+void arrayMax(){
+	int A[size];      
 	int max=A[0];
 	for(int i=0;i<size;i++){
          if(max<A[i]){
@@ -58,42 +72,51 @@ void arrayMax(int A[],unsigned size){
     }
 }
 
-void arrayInit(int A[],unsigned size){
+void arrayInit(){
+	int A[size];    
 	A[0]=7;
 	for(int i=0;i<size;i++){
          A[i]=A[i-1]+1;
     }
 }
 //
-void arrayInit2(int A[],unsigned size){
+void arrayInit2(){
+	int A[size];    
 	A[0]=7;
 	for(int i=1;i<size;i++){
          A[i-1]=A[i]+1;
     }
 }
 //
-void arrayInit3(int A[],unsigned size){
+void arrayInit3(){
+	int A[size];  
 	for(int i=0;i<size;i++){
         A[i]=0;
     }
 }
 //
 //
- void arraySentinel(int A[],unsigned size,int x){
-        int i=0;
+ void arraySentinel(){
+		int A[size];  
+		int x;
+		int i=0;
         while(A[i]!=x&&i<size){
             i=i+1;
         }
 }
-void arraySentinel2(int A[],unsigned size,int x){
-        A[size]=x; 
-	int i=0;
+void arraySentinel2(){
+		 int x;
+        int A[size];
+		 A[size]=x; 
+		 int i=0;
         while(A[i]!=x&&i<size){
             i=i+1;
         }
   }
 
-void arrayPartition(int A[],int B[], int C[],unsigned size,int x){
+void arrayPartition(){
+		 int A[size],B[size],C[size];
+		 int x;
         int i=0,j=0,k=0;
         while(i<size){
             if(A[i]<x){
@@ -107,7 +130,8 @@ void arrayPartition(int A[],int B[], int C[],unsigned size,int x){
             i++;
         }
     }
-void towArrayInit(int** A,unsigned row,unsigned col){
+void towArrayInit(){
+	int A[row][col];
    for(int i=0;i<row;i++){
       for(int j=0;j<col;j++){
            A[i][j]=0;
@@ -116,18 +140,20 @@ void towArrayInit(int** A,unsigned row,unsigned col){
 }
 //
 //
- void firstNotNull(int A[],unsigned size){
+ void firstNotNull(){
+		 int A[size];
         int s=size+1;;
         for(int i=0;i<size;i++){
             if(A[i]!=0){
                 s=i;
-		break;
+				 break;
             }
         }
   }
 
 //we can not process this
-void firstNotNull2(int A[],unsigned size){
+void firstNotNull2(){
+		 int A[size];
         int s=size+1;
         for(int i=0;i<size;i++){
             if(s==size+1&&A[i]!=0){
@@ -136,7 +162,8 @@ void firstNotNull2(int A[],unsigned size){
         }
   }
 
-void threeDarrayCopy(int*** A,int*** B,unsigned d1,unsigned d2,unsigned d3){
+void threeDarrayCopy(){
+	int A[d1][d2][d3],B[d1][d2][d3];
 	for(int i=0;i<d1;i++){
 		for(int j=0;j<d2;j++){			
 			for(int k=0;k<d3;k++){
@@ -146,7 +173,8 @@ void threeDarrayCopy(int*** A,int*** B,unsigned d1,unsigned d2,unsigned d3){
 	}
 }
 
-void threeDarrayCheck(int*** A,int*** B,unsigned d1,unsigned d2,unsigned d3){
+void threeDarrayCheck(){
+	int A[d1][d2][d3],B[d1][d2][d3];
 	for(int i=0;i<d1;i++){
 		for(int j=0;j<d2;j++){			
 			for(int k=0;k<d3;k++){
@@ -161,7 +189,8 @@ void threeDarrayCheck(int*** A,int*** B,unsigned d1,unsigned d2,unsigned d3){
 
 
 //part of quick sort 
-    void find(int A[],unsigned size){
+    void find(){
+		 int A[size];
         int x = A[0] ;
         int i = 1;
         int j =size-1;
@@ -185,13 +214,15 @@ void threeDarrayCheck(int*** A,int*** B,unsigned d1,unsigned d2,unsigned d3){
         A[i-1] = x ;
     }
 //
-void arrayInit4(int A[],unsigned size){
+void arrayInit4(){
+	int A[size];
 	for(int i=1;i<size;i=i+2){
         A[i]=0;
     }
 }
 
-bool threeDarrayCheck2(int*** A,int*** B,unsigned d1,unsigned d2,unsigned d3){
+bool threeDarrayCheck2(){
+	int A[d1][d2][d3],B[d1][d2][d3];
 	for(int i=0;i<d1;i++){
 		for(int j=0;j<d2;j++){			
 			for(int k=0;k<d3;k++){

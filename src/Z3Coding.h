@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include "clang/AST/Expr.h"
+#include "Preprocess.h"
 using namespace z3;
 using namespace std;
 using namespace clang;
@@ -16,8 +17,15 @@ extern  bool occurError;
 enum proved_result {
 	proved, unproved,unknown
 };
-
+class Sort{
+		public:
+		z3::sort type; 
+		Sort(z3::sort ty):type(ty){
+		}
+		
+};
 class Z3Coding{
+	
 	private:
 		context &c;
 		//map c++ name to z3 name
@@ -28,12 +36,17 @@ class Z3Coding{
 		map<std::string,const ValueDecl*> Z3ExprNameToVarDecl;
 		//the Decl of var is dofferent, it record the same name of var but different decl 
 		map<std::string,int> varNameCount;
+		
 		//all varDeclToZ3Expr.second is memoryUnit
 		//all A([i])* ocurs in formula is memoryUnit
 		map<std::string,expr> memoryUnits;
 		
 		bool setRet=false;
 		expr _ret;
+		
+		map<const ValueDecl*,std::pair<expr,expr>> pointerVariable2pointerArray_PointerArrayIndex;
+		
+		
 		void addMemoryUnit(expr memoryUnit){
 			std::string memoryUnitName=Z3_ast_to_string(c,memoryUnit);
 			if(memoryUnits.count(memoryUnitName)<=0){
@@ -120,6 +133,8 @@ class Z3Coding{
 				return e;
 			}
 		}
+		
+		
 		vector<expr> * _DNF(expr f){
 			vector<expr> * ret=new vector<expr>();
 			goal g(c);
@@ -134,7 +149,12 @@ class Z3Coding{
 			return ret;
 		}
 public:
+		bool isAssignedToPointer;
+		bool isPosIncOrDec;
+		bool isPreIncOrDec;
+		Preprocess* preprocess;
 		expr _error;
+		expr _nil;//represent no z3coding
 		expr TRUE;
 		expr FALSE;
 		func_decl _phi;
@@ -143,10 +163,15 @@ public:
 		func_decl GtDecl;
 		func_decl GeDecl;
 		func_decl EqDecl;
-		Z3Coding(context& ctx):c(ctx),_ret(c),_error(c),TRUE(c),FALSE(c),_phi(c)
+		vector<expr>* pointers;
+		map<std::string,vector<expr>*> arrayVariable2arrayLength;
+		Z3Coding(context& ctx,Preprocess * preprocess):c(ctx),_ret(c),_error(c),_nil(c),TRUE(c),FALSE(c),_phi(c)
 		,LtDecl(c),LeDecl(c),GtDecl(c),GeDecl(c),EqDecl(c)
 		{
+			this->preprocess=preprocess;
+			pointers=new vector<expr>();
 			_error=c.int_const("_error");
+			_nil=c.bool_const("_nil");
 			TRUE=c.bool_val(true);
 			FALSE=c.bool_val(false);
 			_phi=c.function("phi",c.int_sort(),c.int_sort(),c.int_sort(),c.bool_sort());
@@ -161,15 +186,24 @@ public:
 			GtDecl=gt.decl();
 			GeDecl=ge.decl();
 			EqDecl=eq.decl();
+			
 		}
 		map<std::string,expr> * getMemoryUnits(){
-			if(setRet==false){
-				return &memoryUnits;
-			}
-			else{
+			if(setRet==true){
 				addMemoryUnit(_ret);
-				return &memoryUnits;	
 			}
+			if(preprocess->isNeedToGhost){
+				for(expr e:*pointers){
+					expr tmp=getPointerBase(e);
+					addMemoryUnit(tmp);
+					tmp=getPointerIndex(e);
+					addMemoryUnit(tmp);
+				}
+			}
+			
+			return &memoryUnits;	
+			
+			
 		}
 		std::string toStringMemoryUnits(){
 			std::string ret="";
@@ -262,7 +296,7 @@ public:
 				return proved_result::unknown;
 			}
 		}
-
+		
 		check_result satisfy(expr conjecture) {
 			solver s(c);
 			s.add(conjecture);
@@ -290,7 +324,7 @@ public:
 			new_e = to_expr(c, Z3_substitute_vars(c, e, 1, _to));
 			return new_e;
 		}
-		expr meet(expr e1,expr e2){
+		/*expr meet(expr e1,expr e2){
 			tactic qe(c, "ctx-solver-simplify");
 			goal g(c);
 			g.add(e1||e2);
@@ -298,6 +332,31 @@ public:
 			apply_result result_of_elimination = qe.apply(g);
 			goal result_goal = result_of_elimination[0];
 			return result_goal.as_expr();
+		}*/
+		expr meet(expr e1,expr e2){
+			vector<expr> * tmp=new vector<expr>();
+			tmp->push_back(e1);
+			//e1=>e2
+			if(prove(tmp,e2)==proved_result::proved){
+				return e2;
+			}
+			tmp->clear();
+			tmp->push_back(e2);
+			//e2=>e1
+			if(prove(tmp,e1)==proved_result::proved){
+				return e1;
+			}
+			return _error;
+		}
+		
+		bool imply(expr e1,expr e2){
+			vector<expr> * tmp=new vector<expr>();
+			tmp->push_back(e1);
+			//e1=>e2
+			if(prove(tmp,e2)==proved_result::proved){
+				return true;
+			}
+			return false;
 		}
 		bool morePower_equal(expr e1,expr e2){
 			tactic qe(c, "ctx-solver-simplify");
@@ -382,13 +441,14 @@ public:
 		}
 		
 		expr simplify(expr e){
+			if(!e.is_bool()) return e;
 			tactic qe(c, "ctx-solver-simplify");
 			goal g(c);
 			if(isPhiFormula(e)){
 				return e;
 			}
 			
-			if(e.is_quantifier()){
+			if(isForAllFormula(e)){
 				expr forallBody=getQuantifierFormulaBody(e);
 				expr tmp=simplify(forallBody);
 //				std::string str=Z3_ast_to_string(c,tmp);
@@ -398,6 +458,10 @@ public:
 				else if(equal(tmp,TRUE)/*str=="false"*/){
 					return c.bool_val("false");
 				}
+				expr begin=getQuantifierBegin(e);
+				expr end=getQuantifierEnd(e);
+				if(equal(begin,end)) return c.bool_val("true");
+				
 				return e;
 			}
 			
@@ -414,7 +478,7 @@ public:
 				return c.bool_val("false");
 			}
 		
-			if(ret.is_app()&&ret.decl().name().str()=="not"){
+			/*if(ret.is_app()&&ret.decl().name().str()=="not"){
 				ret=mySimplify(ret);
 				if(ret.is_app()&&ret.decl().name().str()=="not"){
 					if(!(ret.arg(0).is_app()&&ret.arg(0).decl().name().str()=="=")){
@@ -428,7 +492,25 @@ public:
 			}
 			else{
 				return ret;
+				
+			}*/
+			if(e.is_app()&&e.decl().name().str()=="not"){
+				ret=mySimplify(e);
+				if(ret.is_app()&&ret.decl().name().str()=="not"){
+					if(!(ret.arg(0).is_app()&&ret.arg(0).decl().name().str()=="=")){
+						//std::cerr<<"Z3Coding:simplify: we can not simplify "<<e<<std::endl;
+					}
+					return e;
+				}
+				else{
+					return ret;
+				}
 			}
+			else{
+				return e;
+				
+			}
+			cout<<"end------------"<<std::endl;
 		}
 		
 		bool allIsBoolSort(vector<expr> * formulas){
@@ -439,6 +521,14 @@ public:
 			}
 			return true;
 		}
+		bool mostPower_equal(expr e1,expr e2){
+			expr e=e1==e2;
+			vector<expr> *tmp=new vector<expr>();
+			if(prove(tmp,e)==proved_result::proved){
+				return true;
+			}
+			return false;
+		}
 		/**
 		 * @brief pre: f and all element of formulas is bool sort
 		 * @param f
@@ -446,10 +536,31 @@ public:
 		 * @return 
 		 */
 		bool formulaIsIn(expr f, vector<expr> * formulas){
-			for(expr ele: * formulas){
+			/*for(expr ele: * formulas){
 				expr eq=f==ele;
-//				std::string str=Z3_ast_to_string(c,simplify(eq));
-				if(equal(simplify(eq),TRUE) /*str=="true"*/){
+				if(equal(simplify(eq),TRUE)){
+					return true;
+				}
+			}
+			return false;*/
+			
+			if(isForAllFormula(f)){
+				if(isIn(f,formulas)){
+					return true;
+				}
+			}
+			for(expr ele: * formulas){
+				if(isForAllFormula(f)&&isSimpleFormula(ele)) return false;
+				if(isForAllFormula(ele)&&isSimpleFormula(f)) return false;
+				if(isForAllFormula(f)&&isForAllFormula(ele)){
+					if(equal(f.body().arg(0),ele.body().arg(0))){
+						if(mostPower_equal(getQuantifierFormulaBody(f),getQuantifierFormulaBody(ele))){
+							return true;
+						}
+					}
+					return false;
+				}
+				if(mostPower_equal(f,ele)){
 					return true;
 				}
 			}
@@ -468,7 +579,6 @@ public:
 			
 			vector<expr> *simplifyformulas1=new vector<expr>();
 			for(expr ele: * formulas){
-
 				ele=simplify(ele);
 
 //				std::string str=Z3_ast_to_string(c,ele);
@@ -504,7 +614,7 @@ public:
 				ele=simplify(ele);
 
 //				std::string str=Z3_ast_to_string(c,ele);
-				if(!equal(ele,TRUE) /*!(str=="true")*/){
+				if(!equal(ele,TRUE)){
 					simplifyformulas1->push_back(ele);
 				}
 			}
@@ -535,7 +645,19 @@ public:
 			return strout.str();
 		}
 		
-		
+		std::string toString(vector<z3::expr>* exprs){
+			if(exprs==nullptr) return "";
+			std::string ret="";
+			for(auto it=exprs->begin();it!=exprs->end();it++){
+				z3::expr e=(z3::expr) *it;
+				std::string eName=Z3_ast_to_string(c,e);
+				ret+=eName+"; ";
+				if(e.is_quantifier()){
+					ret+="\n";
+				}
+			}
+			return ret;
+		}
 		/**
 		 * @brief define the format of our quantifier_formula
 		 * 			forall i, extendFormula&&begin<=i&&i<end&&end%step=0 => p(i) 
@@ -894,7 +1016,7 @@ public:
 			return check_phi_formula(phiFormula);
 		}
 		bool isSimpleFormula(expr simpleFormula){
-			return !isPhiFormula(simpleFormula)&&!isForAllFormula(simpleFormula);
+			return !isPhiFormula(simpleFormula)&&!isForAllFormula(simpleFormula)&&!isOrFormula(simpleFormula);
 		}
 		/**
 		 * @brief 
@@ -987,6 +1109,12 @@ public:
 			}
 			return toSet(arrayAcesses);
 		}
+		void addMemoryUnits(vector<expr>* memoryUnits){
+			for(expr e:*memoryUnits){
+				addMemoryUnit(e);
+			}
+		}
+		
 		/**
 		 * @brief such as: A[A[i]]+B[i+j][k]>0, return A[A[i]],B[i+j][k]
 		 * @param e
@@ -1093,7 +1221,13 @@ public:
 				return _error;
 			}
 		}
-		
+		vector<expr> * eliminateNotFormula(vector<expr> * formulas){
+			vector<expr>* result=new  vector<expr>();
+			for(expr f: *formulas){
+				result->push_back(eliminateNotSimpleFormula(f));
+			}
+			return result;
+		}
 		/**
 		 * @brief if e is not array acess,return 0;else return the Dimension of ArrayAcess e
 		 * @param e
@@ -1209,7 +1343,7 @@ public:
 			}
 			else {
 				std::cerr<<"Z3Coding:unprime: We do not consider prime: "<<e<<std::endl;
-				return _error;
+				return e;
 			}
 		}
 		
@@ -1232,6 +1366,10 @@ public:
 					ret->push_back(f);
 				}
 			}
+			return ret;
+		}
+		expr eliminateNotSimpleFormula(expr e){
+			expr ret=mySimplify(e);
 			return ret;
 		}
 		/**
@@ -1316,17 +1454,24 @@ public:
 				B->push_back(t);
 			}
 		}
-		
+		void addPointers(expr e){
+			if(!isIn(e,pointers)){
+				pointers->push_back(e);
+			}
+		}
 		vector<expr> * clangBinaryOperatorToZ3Expr(clang::BinaryOperator * binaryOperator){
 			vector<expr>* exprs=new vector<expr>();
 			vector<expr>* lhss=clangExprToZ3Expr(binaryOperator->getLHS());
 			vector<expr>* rhss=clangExprToZ3Expr(binaryOperator->getRHS());
-			if(lhss==nullptr||rhss==nullptr){
+			if(lhss==nullptr||rhss==nullptr||lhss->size()==0||rhss->size()==0){
 				return nullptr;
 			}
+			
 			expr lhs=lhss->back();lhss->pop_back();
 			expr rhs=rhss->back();rhss->pop_back();
-
+			if(!Z3_is_eq_sort(c,lhs.get_sort(),rhs.get_sort())){
+				return nullptr;
+			}
 			//memoryUnits,just add select memory unit
 			if(isArrayAcess(lhs)){
 				addMemoryUnit(lhs);
@@ -1343,82 +1488,136 @@ public:
 					std::cerr<<"Z3Coding:clangBinaryOperatorToZ3Expr: We do not consider processing binaryOperator: "<<binaryOperator->getOpcodeStr().data()<<std::endl;
 					return nullptr;
 				case BO_Mul 	://*
+				    if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs*rhs);
 					break;
 				case BO_Div 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs/rhs);
 					break;
 				case BO_Rem	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(to_expr(c,Z3_mk_mod(c,lhs,rhs)));
 					break;
 				case BO_Add 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs+rhs);
 					break;
 				case BO_Sub 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs-rhs);
 					break;
 				case BO_LT 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs<rhs);
 					break;
 				case BO_GT 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs>rhs);
 					break;
 				case BO_LE 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs<=rhs);
 					break;
 				case BO_GE 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs>=rhs);
 					break;
 				case BO_EQ 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs==rhs);
 					break;
 				case BO_NE 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					exprs->push_back(lhs!=rhs);
 					break;
-				case BO_And 	:
+				/*case BO_And 	:
 					exprs->push_back(lhs&rhs);
-					break;
-				case BO_Or 	:
+					break;*/
+				/*case BO_Or 	:
 					exprs->push_back(lhs|rhs);
-					break;
+					break;*/
 				case BO_LAnd 	:
 					//exprs->push_back(lhs&&rhs);
-					exprs->push_back(lhs);
-					exprs->push_back(rhs);
+					if(!(lhs.is_bool()||lhs.is_int())||!(rhs.is_bool()||rhs.is_int())) return nullptr;
+					if(lhs.is_int()){
+						lhs=lhs==0;
+					}
+					if(rhs.is_int()){
+						rhs=rhs==0;
+					}
+					exprs->push_back(lhs&&rhs);
 					break;
 				case BO_LOr 	:
+					if(!(lhs.is_bool()||lhs.is_int())||!(rhs.is_bool()||rhs.is_int())) return nullptr;
+					if(lhs.is_int()){
+						lhs=lhs==0;
+					}
+					if(rhs.is_int()){
+						rhs=rhs==0;
+					}
 					exprs->push_back(lhs||rhs);
 					break;
 				case BO_Assign 	:
-					exprs->push_back(prime(lhs)==rhs);
-					exprs->push_back(rhs);
+					if(isPointerType(binaryOperator->getLHS()->getType())){
+						//isAssignedToPointer=true;
+						if(preprocess->isNeedToGhost){
+							if(isPointerType(binaryOperator->getRHS()->getType())){
+								expr lhsBase=getPointerBase(lhs);
+								expr rhsBase=getPointerBase(lhs);
+								exprs->push_back(prime(lhsBase)==rhsBase);
+								expr lhsIndex=getPointerIndex(lhs);
+								expr rhsIndex=getPointerIndex(lhs);
+								exprs->push_back(prime(lhsIndex)==rhsIndex);
+								exprs->push_back(rhs);
+								addPointers(lhs);
+								addPointers(rhs);
+							}
+							else{
+								return nullptr;
+							}
+						}
+						else{
+							exprs->push_back(prime(lhs)==rhs);
+							exprs->push_back(rhs);
+						}
+					}
+					else{
+						exprs->push_back(prime(lhs)==rhs);
+						exprs->push_back(rhs);
+					}
 					break;
 				case BO_MulAssign 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					tmp=lhs*rhs;
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
 					break;
 				case BO_DivAssign 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					tmp=lhs/rhs;
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
 					break;
 				case BO_RemAssign		:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					tmp=to_expr(c,Z3_mk_mod(c,lhs,rhs));
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
 					break;
 				case BO_AddAssign 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					tmp=lhs+rhs;
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
 					break;
 				case BO_SubAssign 	:
+					if(!lhs.is_int()||!rhs.is_int()) return nullptr;
 					tmp=lhs-rhs;
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
 					break;
-				case BO_AndAssign 	:
+				/*case BO_AndAssign 	:
 					tmp=lhs&rhs;
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
@@ -1427,39 +1626,130 @@ public:
 					tmp=lhs|rhs;
 					exprs->push_back(prime(lhs)==tmp);
 					exprs->push_back(tmp);
-					break;
+					break;*/
 			}
 			return exprs;
 		}
-		z3::sort clangTypeToZ3Sort(QualType qt){
+		expr getPointerBase(expr e){
+			if(isPrimedVariable(e)){
+				e=unprime(e);
+				std::string eName=Z3_ast_to_string(c,e);
+				std::string baseName=eName+"_initbase";
+				expr arraybase=c.constant(baseName.c_str(),e.get_sort());
+				return prime(arraybase);
+			}
+			else{
+				std::string eName=Z3_ast_to_string(c,e);
+				std::string baseName=eName+"_initbase";
+				expr arraybase=c.constant(baseName.c_str(),e.get_sort());
+				return arraybase;
+			}
+								
+		}
+		expr getPointerIndex(expr e){
+			if(isPrimedVariable(e)){
+				e=unprime(e);
+				std::string eName=Z3_ast_to_string(c,e);
+				std::string indexName=eName+"_index";
+				expr arrayindex=c.int_const(indexName.c_str());
+				return prime(arrayindex);
+			}
+			else{
+				std::string eName=Z3_ast_to_string(c,e);
+				std::string indexName=eName+"_index";
+				expr arrayindex=c.int_const(indexName.c_str());
+				return arrayindex;					
+			}
+		}
+		bool isPointerIndex(expr e){
+			if(e.is_const()){ 
+				std::size_t found = e.decl().name().str().rfind("_index");
+				if (found!=std::string::npos){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		Sort* clangTypeToZ3Sort(QualType qt){
 			QualType canonicalType=qt.getTypePtr()->getCanonicalTypeInternal();
 			//std::cout<<" Type is: "<<toString(qt)<<std::endl;
 			//std::cout<<" CanonicalType is: "<<toString(canonicalType)<<std::endl;
 			if(canonicalType.getTypePtr()->isIntegerType()){
-				return c.int_sort();
+				return new Sort(c.int_sort());
+			}
+			if(canonicalType.getTypePtr()->isCharType()){
+				return new Sort(c.int_sort());
 			}
 			else if(canonicalType.getTypePtr()->isBooleanType()){
-				return c.bool_sort();
+				return new Sort(c.bool_sort());
 			}
 			else if(canonicalType.getTypePtr()->isArrayType()){
 				const ArrayType * arraytype=(const ArrayType *)canonicalType.getTypePtr();
-				z3::sort elementSort=clangTypeToZ3Sort(arraytype->getElementType());
-				return c.array_sort(c.int_sort(),elementSort);
+				
+				Sort* tmp=clangTypeToZ3Sort(arraytype->getElementType());
+				if(tmp!=nullptr){
+					z3::sort elementSort=tmp->type;
+					return new Sort(c.array_sort(c.int_sort(),elementSort));
+				}
+				return nullptr;
 			}
 			else if(canonicalType.getTypePtr()->isPointerType()){
 				//we regard pointer type as array
 				const PointerType * pt =(const PointerType *)canonicalType.getTypePtr();
-				z3::sort pointeeSort=clangTypeToZ3Sort(pt->getPointeeType());
-				return c.array_sort(c.int_sort(),pointeeSort);
+				Sort* tmp=clangTypeToZ3Sort(pt->getPointeeType());
+				if(tmp!=nullptr){
+					z3::sort pointeeSort=tmp->type;
+					return new Sort(c.array_sort(c.int_sort(),pointeeSort));
+				}
+				return nullptr;
+				/*
+				return nullptr;
+				*/
 			}
 			else {
 				std::cerr<<"Z3Coding:clangTypeToZ3Sort: We do not process type : "<<toString(qt)<<std::endl;
-				return c.int_sort();
+				return nullptr;
 			}
 		}
+		
+		
 		expr clangCallExprToZ3Expr(clang::CallExpr * callexpr){
-			expr    e=c.int_const("i");
-			return e;
+			return _error;
+		}
+		
+		bool setArrayVariable2ArrayLength(std::string varName,QualType qt){
+			QualType canonicalType=qt.getTypePtr()->getCanonicalTypeInternal();
+			const Type * arraytype=canonicalType.getTypePtr();
+			if(!arraytype->isArrayType()) return false;
+			vector<expr>* sizes=getArrayTypeLength(arraytype);
+			if(sizes==nullptr) return false;
+			arrayVariable2arrayLength.insert(std::pair<std::string,vector<expr>*>(varName,sizes));	
+			return true;
+		}
+		vector<expr>* getArrayTypeLength(const Type * t){
+			vector<expr>* result=new vector<expr>();
+			if(!t->isArrayType()) return result;
+			const ArrayType * arraytype=(const ArrayType *)t;
+			if(arraytype->isConstantArrayType()){
+				const ConstantArrayType  * constantarraytype=(const ConstantArrayType *)arraytype;
+				expr size=c.int_val((__int64)constantarraytype->getSize().getSExtValue());
+				result->push_back(size);
+			}
+			if(arraytype->isVariableArrayType()){
+				const VariableArrayType * variablearraytype=(const VariableArrayType *)arraytype;
+				vector<expr> * tmp=this->clangExprToZ3Expr(variablearraytype->getSizeExpr());
+				if(tmp==nullptr||tmp->size()==0) return nullptr;
+				expr size=tmp->back();
+				result->push_back(size);
+			}
+			if(arraytype->isIncompleteArrayType()){
+				return nullptr;
+			}
+			vector<expr>* tmp=getArrayTypeLength(arraytype->getElementType().getCanonicalType().getTypePtr());
+			if(tmp==nullptr) return nullptr;
+			pushAToB(tmp,result);
+			return result;
 		}
 		expr clangDeclRefExprToZ3Expr(clang::DeclRefExpr* clangDeclRefExpr){
 			const ValueDecl*  valueDecl=clangDeclRefExpr->getDecl();
@@ -1496,9 +1786,23 @@ public:
 				//if varName exists? getThe count
 				if(varNameCount.count(varName)<=0){
 					std::string z3Name=varName;
-					z3::sort ty=clangTypeToZ3Sort(declQT);
+					Sort* tmpTy=clangTypeToZ3Sort(declQT);
+					
+					if(tmpTy==nullptr) return _error;
+					
+					z3::sort ty=tmpTy->type;
+					
 					expr z3expr=c.constant(z3Name.c_str(),ty);
 					varDeclToZ3Expr.insert(std::pair<const ValueDecl *,z3::expr>(valueDecl,z3expr));
+					
+					#ifdef _CHECK_ARRAY_SIZE_VALID
+					if(declQT.getTypePtr()->isArrayType()){
+						if(!setArrayVariable2ArrayLength(z3Name,declQT)){
+							return _error;
+						}
+					}
+					#endif
+					
 					Z3ExprNameToVarDecl[z3Name]=valueDecl;
 					varNameCount[varName]=1;
 					return z3expr;
@@ -1506,9 +1810,22 @@ public:
 				else{
 					int count=varNameCount.at(varName);
 					std::string z3Name=varName+std::to_string(count+1);
-					z3::sort ty=clangTypeToZ3Sort(declQT);
+					Sort* tmpTy=clangTypeToZ3Sort(declQT);
+					
+					if(tmpTy==nullptr) return _error;
+					
+					z3::sort ty=tmpTy->type;
+					
 					expr z3expr=c.constant(z3Name.c_str(),ty);
 					varDeclToZ3Expr.insert(std::pair<const ValueDecl *,z3::expr>(valueDecl,z3expr));
+					
+					#ifdef _CHECK_ARRAY_SIZE_VALID
+					if(declQT.getTypePtr()->isArrayType()){
+						if(!setArrayVariable2ArrayLength(z3Name,declQT)){
+							return _error;
+						}
+					}
+					#endif
 					Z3ExprNameToVarDecl[z3Name]=valueDecl;
 					varNameCount[varName]=count+1;
 					return z3expr;
@@ -1522,6 +1839,9 @@ public:
 			const clang::Expr * idx=arraySubscriptExpr->getIdx();			
 			vector<expr>* baseZ3Exprs=clangExprToZ3Expr(base);
 			vector<expr>* idxZ3Exprs=clangExprToZ3Expr(idx);
+			if(baseZ3Exprs==nullptr||idxZ3Exprs==nullptr){
+				return nullptr;
+			}
 			expr baseZ3Expr=baseZ3Exprs->back();baseZ3Exprs->pop_back();
 			expr idxZ3Expr=idxZ3Exprs->back();idxZ3Exprs->pop_back();
 			pushAToB(baseZ3Exprs,exprs);
@@ -1562,7 +1882,12 @@ public:
 		  expr  clangStringLiteralToZ3Expr(clang::StringLiteral * stringLiteral){
 
 		  }*/
-
+		bool isPointerType(QualType qt){
+			QualType canonicalType=qt.getTypePtr()->getCanonicalTypeInternal();
+			const Type * ty=canonicalType.getTypePtr();
+			if(ty->isPointerType()) return true;
+			return false;
+		}
 		vector<expr>*  clangUnaryOperatorToZ3Expr(clang::UnaryOperator * unaryOperator){
 			vector<expr>* exprs=new vector<expr>();
 			vector<expr>* subExprs=clangExprToZ3Expr(unaryOperator->getSubExpr());
@@ -1571,7 +1896,7 @@ public:
 				return nullptr;
 			}
 			expr subExpr=subExprs->back();subExprs->pop_back();
-
+			
 			//memoryUnits,just add select memory unit
 			if(isArrayAcess(subExpr)){
 				addMemoryUnit(subExpr);
@@ -1584,41 +1909,150 @@ public:
 					std::cerr<<"Z3Coding:clangUnaryOperatorToZ3Expr: We do not consider processing unaryOperator: "<<unaryOperator->getOpcodeStr(unaryOperator->getOpcode()).str()<<std::endl;
 					return nullptr;
 				case UO_PostInc 	://i++
-					tmp=subExpr;
-					exprs->push_back(prime(subExpr)==subExpr+1);
-					exprs->push_back(tmp);
+					if(checkError(subExpr)||!(subExpr.is_int()||isPointerType(unaryOperator->getSubExpr()->getType()))) return nullptr;
+					isPosIncOrDec=true;
+					if(isPointerType(unaryOperator->getSubExpr()->getType())){
+						if(preprocess->isNeedToGhost){
+							tmp=subExpr;
+							expr arrayIndex=getPointerIndex(subExpr);
+							exprs->push_back(prime(arrayIndex)==arrayIndex+1);
+							exprs->push_back(tmp);
+							addPointers(subExpr);
+						}
+						else{
+							return nullptr;
+						}
+					}
+					else{
+						tmp=subExpr;
+						exprs->push_back(prime(subExpr)==subExpr+1);
+						exprs->push_back(tmp);
+					}
 					break;
 				case UO_PostDec 	://i--;
-					tmp=subExpr;
-					exprs->push_back(prime(subExpr)==subExpr-1);
-					exprs->push_back(tmp);
+					if(checkError(subExpr)||!(subExpr.is_int()||isPointerType(unaryOperator->getSubExpr()->getType()))) return nullptr;
+					isPosIncOrDec=true;
+					if(isPointerType(unaryOperator->getSubExpr()->getType())){
+						if(preprocess->isNeedToGhost){
+							tmp=subExpr;
+							expr arrayIndex=getPointerIndex(subExpr);
+							exprs->push_back(prime(arrayIndex)==arrayIndex-1);
+							exprs->push_back(tmp);
+							addPointers(subExpr);
+						}
+						else{
+							return nullptr;
+						}
+					}
+					else{
+						tmp=subExpr;
+						exprs->push_back(prime(subExpr)==subExpr-1);
+						exprs->push_back(tmp);
+					}
 					break;
 				case UO_PreInc 	://++i
-					tmp=prime(subExpr);
-					exprs->push_back(tmp==subExpr+1);
-					exprs->push_back(tmp);
+					if(checkError(subExpr)||!(subExpr.is_int()||isPointerType(unaryOperator->getSubExpr()->getType()))) return nullptr;
+					isPreIncOrDec=true;
+					if(isPointerType(unaryOperator->getSubExpr()->getType())){
+						if(preprocess->isNeedToGhost){
+							tmp=prime(subExpr);
+							expr arrayIndex=getPointerIndex(subExpr);
+							exprs->push_back(prime(arrayIndex)==arrayIndex+1);
+							exprs->push_back(tmp);
+							addPointers(subExpr);
+						}
+						else{
+							return nullptr;
+						}
+					}
+					else{
+						tmp=prime(subExpr);
+						exprs->push_back(tmp==subExpr+1);
+						exprs->push_back(tmp);
+					}
 					break;
 				case UO_PreDec 	://--i;
-					tmp=prime(subExpr);
-					exprs->push_back(tmp==subExpr-1);
-					exprs->push_back(tmp);
+					if(checkError(subExpr)||!(subExpr.is_int()||isPointerType(unaryOperator->getSubExpr()->getType()))) return nullptr;
+					isPreIncOrDec=true;
+					if(preprocess->isNeedToGhost){
+							tmp=prime(subExpr);
+							expr arrayIndex=getPointerIndex(subExpr);
+							exprs->push_back(prime(arrayIndex)==arrayIndex-1);
+							exprs->push_back(tmp);
+							addPointers(subExpr);
+					}
+					else{
+						tmp=prime(subExpr);
+						exprs->push_back(tmp==subExpr-1);
+						exprs->push_back(tmp);
+					}
 					break;
 				case UO_Plus 	://+i
+					if(!subExpr.is_int()||checkError(subExpr)) return nullptr;
 					exprs->push_back(subExpr);
 					break;
 				case UO_Minus 	://-i;
+					if(!subExpr.is_int()||checkError(subExpr)) return nullptr;
 					exprs->push_back(-subExpr);
 					break;
 				case UO_Not 	://~i;
+					if(!subExpr.is_int()||checkError(subExpr)) return nullptr;
 					exprs->push_back(~subExpr);
 					break;
 				case UO_LNot 	://!i
-					exprs->push_back(!subExpr);
+					if(!(subExpr.is_bool()||subExpr.is_int())||checkError(subExpr)) return nullptr;
+					if(subExpr.is_int()){
+						exprs->push_back(!(subExpr!=0));
+					}
+					else{
+						exprs->push_back(!subExpr);
+					}
 					break;
+				case UO_Deref 	:
+					if(preprocess->isNeedToGhost){
+						if(isPointerType(unaryOperator->getSubExpr()->getType())){
+							expr arraybase=getPointerBase(subExpr);
+							expr arrayindex=getPointerIndex(subExpr);
+							exprs->push_back(select(arraybase,arrayindex));
+							addPointers(subExpr);
+						}
+						else{
+							return nullptr;
+						}
+					}
+					else {
+						return nullptr;
+					}
 			}
 			return exprs;
 		}
-
+		vector<expr> * filteringLeftNonForAllFormula(vector<expr> * formulas){
+			vector<expr> * result=new vector<expr>();
+			for(expr e:*formulas){
+				if(!isForAllFormula(e)){
+					result->push_back(e);
+				}
+			}
+			return result;
+		}
+		vector<expr> * filteringLeftSimpleFormula(vector<expr> * formulas){
+			vector<expr> * result=new vector<expr>();
+			for(expr e:*formulas){
+				if(isSimpleFormula(e)){
+					result->push_back(e);
+				}
+			}
+			return result;
+		}
+		vector<expr> * filteringLeftNonSimpleFormula(vector<expr> * formulas){
+			vector<expr> * result=new vector<expr>();
+			for(expr e:*formulas){
+				if(!isSimpleFormula(e)){
+					result->push_back(e);
+				}
+			}
+			return result;
+		}
 		vector<expr>*  clangExprToZ3Expr(const clang::Expr * clangexpr){
 			vector<expr>* exprs=new vector<expr>();
 			expr tmp(c);
@@ -1634,18 +2068,22 @@ public:
 					break;
 				case clang::Stmt::CharacterLiteralClass:
 					tmp=clangCharacterLiteralToZ3Expr((clang::CharacterLiteral*)clangexpr);
+					if(checkError(tmp)) return nullptr;
 					exprs->push_back(tmp);
 					break;
 				case clang::Stmt::CXXBoolLiteralExprClass:
 					tmp=clangCXXBoolLiteralExprToZ3Expr((clang::CXXBoolLiteralExpr*)clangexpr);
+					if(checkError(tmp)) return nullptr;
 					exprs->push_back(tmp);
 					break;
 				case clang::Stmt::IntegerLiteralClass:
 					tmp=clangIntegerLiteralToZ3Expr((clang::IntegerLiteral*)clangexpr);
+					if(checkError(tmp)) return nullptr;
 					exprs->push_back(tmp);
 					break;
 				case clang::Stmt::DeclRefExprClass:
 					tmp=clangDeclRefExprToZ3Expr((clang::DeclRefExpr*)clangexpr);
+					if(checkError(tmp)) return nullptr;
 					exprs->push_back(tmp);
 					break;
 				case clang::Stmt::UnaryOperatorClass:
@@ -1660,6 +2098,17 @@ public:
 						  std::cout<<"SubExprAsWritten type is: "<<toString(castExpr->getSubExprAsWritten()->getType())<<std::endl;
 						  std::cout<<"CastKindName is: "<<castExpr->getCastKindName()<<std::endl;*/
 						exprs=clangExprToZ3Expr(castExpr->getSubExpr());
+						break;
+					}
+				case clang::Stmt::ParenExprClass:
+					{
+						const ParenExpr * parenExpr=(const ParenExpr *)clangexpr;
+						/*std::cout<<"SubExpr is: "<<toString(castExpr->getSubExpr())<<std::endl;
+						  std::cout<<"SubExpr type is: "<<toString(castExpr->getSubExpr()->getType())<<std::endl;
+						  std::cout<<"SubExprAsWritten is: "<<toString(castExpr->getSubExprAsWritten())<<std::endl;
+						  std::cout<<"SubExprAsWritten type is: "<<toString(castExpr->getSubExprAsWritten()->getType())<<std::endl;
+						  std::cout<<"CastKindName is: "<<castExpr->getCastKindName()<<std::endl;*/
+						exprs=clangExprToZ3Expr(parenExpr->getSubExpr());
 						break;
 					}
 			}
@@ -1708,9 +2157,19 @@ public:
 				//if varName exists? get the count
 				if(varNameCount.count(varName)<=0){
 					std::string z3Name=varName;
-					z3::sort ty=clangTypeToZ3Sort(declQT);
+					Sort* tmpTy=clangTypeToZ3Sort(declQT);
+					if(tmpTy==nullptr) return nullptr;
+					z3::sort ty=tmpTy->type;
 					varZ3Expr=c.constant(z3Name.c_str(),ty);
 					varDeclToZ3Expr.insert(std::pair<const ValueDecl *,z3::expr>(valueDecl,varZ3Expr));
+					
+					#ifdef _CHECK_ARRAY_SIZE_VALID
+					if(declQT.getTypePtr()->isArrayType()){
+						if(!setArrayVariable2ArrayLength(z3Name,declQT)){
+							return nullptr;
+						}
+					}
+					#endif
 					//std::cout<<varZ3Expr<<":"<<varZ3Expr.get_sort()<<std::endl;
 					Z3ExprNameToVarDecl[z3Name]=valueDecl;
 					varNameCount[varName]=1;
@@ -1718,22 +2177,58 @@ public:
 				else{
 					int count=varNameCount.at(varName);
 					std::string z3Name=varName+std::to_string(count+1);;
-					z3::sort ty=clangTypeToZ3Sort(declQT);
+					Sort* tmpTy=clangTypeToZ3Sort(declQT);
+					if(tmpTy==nullptr) return nullptr;
+					z3::sort ty=tmpTy->type;
 					varZ3Expr=c.constant(z3Name.c_str(),ty);
 					varDeclToZ3Expr.insert(std::pair<const ValueDecl *,z3::expr>(valueDecl,varZ3Expr));
+					
+					#ifdef _CHECK_ARRAY_SIZE_VALID
+					if(declQT.getTypePtr()->isArrayType()){
+						if(!setArrayVariable2ArrayLength(z3Name,declQT)){
+							return nullptr;
+						}
+					}
+					#endif
+					
 					Z3ExprNameToVarDecl[z3Name]=valueDecl;
 					varNameCount[varName]=count+1;
 				}
 			}
 			if(varDecl->hasInit()){
 				vector<expr> * initZ3Exprs=clangExprToZ3Expr(varDecl->getInit()); 
+				if(initZ3Exprs==nullptr) return nullptr;
 				expr initZ3Expr=initZ3Exprs->back();initZ3Exprs->pop_back();
 				pushAToB(initZ3Exprs,exprs);
 				//std::cout<<varZ3Expr<<":"<<varZ3Expr.get_sort()<<"=="<<initZ3Expr<<":"<<initZ3Expr.get_sort()<<std::endl;
-				exprs->push_back(prime(varZ3Expr)==initZ3Expr);
+				if(!Z3_is_eq_sort(c,varZ3Expr.get_sort(),initZ3Expr.get_sort())) return nullptr;
+				
+				if(isPointerType(declQT)){
+						if(preprocess->isNeedToGhost){
+							expr lhsBase=getPointerBase(varZ3Expr);
+							expr rhsBase=getPointerBase(initZ3Expr);
+							exprs->push_back(prime(lhsBase)==rhsBase);
+							expr lhsIndex=getPointerIndex(varZ3Expr);
+							expr rhsIndex=getPointerIndex(initZ3Expr);
+							exprs->push_back(prime(lhsIndex)==rhsIndex);
+							addPointers(varZ3Expr);
+							addPointers(initZ3Expr);
+						}
+				}
+				else{
+					exprs->push_back(prime(varZ3Expr)==initZ3Expr);
+				}
 			}
 			else{
-				//doNathing
+				if(preprocess->isNeedToGhost){
+						if(isPointerType(declQT)){
+							expr lhsIndex=getPointerIndex(varZ3Expr);
+							addPointers(varZ3Expr);
+							isAssignedToPointer=true;
+							exprs->push_back(prime(lhsIndex)==0);
+						}
+						
+				}
 			}
 
 			return exprs;
@@ -1789,7 +2284,32 @@ public:
 			}
 			return ret;
 		}
-		
+		/**
+		 * @brief for f in formulas, if f is a&&b, remove f ,add a,b
+		 * @param formulas
+		 * @return 
+		 */
+		vector<expr>* splitLANDFormulas(vector<expr>* formulas){
+			vector<expr>* result=new vector<expr>();
+			for(expr f:*formulas){
+				vector<expr>* tmp=splitLANDFormula(f);
+				pushAToB(tmp,result);
+			}
+			return result;
+		}
+		vector<expr>* splitLANDFormula(expr f){
+			vector<expr>* result=new vector<expr>();
+			if(f.is_app()&&f.decl().name().str()=="and"){
+				vector<expr>* left=splitLANDFormula(f.arg(0));
+				vector<expr>* right=splitLANDFormula(f.arg(1));
+				pushAToB(left,result);
+				pushAToB(right,result);
+			}
+			else{
+				result->push_back(f);
+			}
+			return result;
+		}
 		vector<expr> * filteringOrFormula(vector<expr>* formulas){
 			vector<expr>* ret=new vector<expr>();
 			for(expr f:* formulas){
@@ -1834,6 +2354,7 @@ public:
 						const Expr* retValue=returnStmt->getRetValue();
 						if(retValue!=nullptr){
 							exprs=clangExprToZ3Expr(retValue);
+							if(exprs==nullptr) return nullptr;
 							expr returnExpr=exprs->back();exprs->pop_back();
 							exprs->push_back(getRet(returnExpr)==returnExpr);
 						}
@@ -1846,6 +2367,7 @@ public:
 			}
 			return exprs;
 	}
+	
 	expr unprimedDecline(expr primedformula){
 			vector<expr> * cons=getConsts(primedformula);
 			expr unprimedformula=primedformula;
@@ -1868,6 +2390,46 @@ public:
 			}
 			return primedformula;
 	}
+	std::string toString(expr p){
+			std::string ret;
+			if(isSimpleFormula(p)){
+				ret=Z3_ast_to_string(c,p);
+				return ret;
+			}
+			else if(isForAllFormula(p)){
+				std::string quantifierStr=Z3_ast_to_string(c,getQuantifier(p));
+				std::string beginStr=Z3_ast_to_string(c,getQuantifierBegin(p));
+				expr beginFormula=getQuantifierBeginFormula(p);
+				std::string endStr=Z3_ast_to_string(c,getQuantifierEnd(p));
+				expr endFormula=getQuantifierEndFormula(p);
+				std::string stepStr=Z3_ast_to_string(c,getQuantifierStep(p));
+				expr body=getQuantifierFormulaBody(p);
+
+				std::string ret="forall "+quantifierStr+ " in ";
+				if(beginFormula.decl().name().str()=="<="){
+					ret+="[";
+				}
+				else{
+					ret+="(";
+				}
+				ret+=beginStr+","+stepStr+","+endStr;
+				if(endFormula.decl().name().str()=="<="){
+					ret+="]";
+				}
+				else{
+					ret+=")";
+				}
+				ret+=",";
+				std::string bodyStr=toString(body);
+				ret+=bodyStr;
+				return ret;
+			}
+			
+			else if(isPhiFormula(p)){
+				return "";
+			}
+			return "error";
+		}
 };
 
 #endif

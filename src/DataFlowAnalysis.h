@@ -73,12 +73,15 @@ public:
 			#endif
 			CFGBlock* n=worklist.front();worklist.pop_front();
 			#if  defined _DEBUG || defined _PERFORMANCE_DEBUG
-			
+			if(n->getBlockID()==6){
+				std::cout <<"-----------process [B"<< n->getBlockID()<<"]-------------"<<std::endl;
+			}
 			std::cout <<"-----------process [B"<< n->getBlockID()<<"]-------------"<<std::endl;
 			#endif
 			
 			
 			list<pair<CFGBlock*,FlowSet*>*> * old=clone(mapToBlockOut.at(n));
+			
 			if(n!=&entry){
 				CFGBlock::pred_iterator pred_iter=n->pred_begin();
 				CFGBlock *pred=*pred_iter;
@@ -109,6 +112,7 @@ public:
 			if(!equal(outs,old)){
 				for(CFGBlock::succ_reverse_iterator  succ_iter=n->succ_rbegin();succ_iter!=n->succ_rend();++succ_iter){
 					CFGBlock *succ=*succ_iter;
+					if(succ==nullptr) continue;
 					//if n->a's out has no change, we will not push a in to worklist to traversal
 					//this is also for traversal feasible path
 					if(!isIn(worklist,succ)){
@@ -137,6 +141,7 @@ public:
 	virtual FlowSet * entryInitialFlow(){return nullptr;}
 	virtual void merge(FlowSet  *&in1,FlowSet  *&in2,FlowSet *&out){}
 	virtual void copy(FlowSet  *&from,FlowSet  *&to){return ;}
+	virtual bool equal(FlowSet  *&from,FlowSet  *&to){return from->equal(to);}
 	virtual void flowThrouth(CFGBlock *&n, FlowSet *&in, list<pair<CFGBlock*,FlowSet*>*> *&outs){}
 	void printWorkList(list<CFGBlock*> *worklist){
 		std::cout <<"workList is :";
@@ -153,6 +158,7 @@ public:
 			for (std::list<pair<CFGBlock*,FlowSet*>*>::iterator outsIt = outs->begin(); 
 									outsIt != outs->end(); outsIt++){
 				pair<CFGBlock*,FlowSet*> *ele=*outsIt;
+				if(ele->first==nullptr) continue;
 				std::cout <<"[B"<< it->first->getBlockID()<<"]"<<"-> [B" <<ele->first->getBlockID()<<"]"<<" out :"; ele->second->print();
 			}
 		}
@@ -197,7 +203,7 @@ private:
 		while(it1 != outs1->end()){
 			pair<CFGBlock*,FlowSet*> *ele1=*it1;
 			pair<CFGBlock*,FlowSet*> *ele2=*it2;
-			if(ele1->first!=ele2->first||!ele1->second->equal(ele2->second)){
+			if(ele1->first!=ele2->first||!equal(ele1->second,ele2->second)){
 				return false;
 			}
 			it1++;
@@ -220,7 +226,7 @@ private:
 				it2++;
 				continue;
 			}
-			if(ele1->first!=ele2->first||!ele1->second->equal(ele2->second)){
+			if(ele1->first!=ele2->first||!equal(ele1->second,ele2->second)){
 				return false;
 			}
 			else{
@@ -255,11 +261,15 @@ private:
 		while(!queue.empty()){
 			CFGBlock* n=queue.front();queue.pop_front();
 			//get succ of n
+			
 			if(!isIn(worklist,n)){
 				worklist.push_back(n);
 				for(CFGBlock::succ_iterator succ_iter=n->succ_begin();succ_iter!=n->succ_end();++succ_iter){
 					CFGBlock *succ=*succ_iter;
-					queue.push_back(succ);
+					if(succ!=nullptr){
+						queue.push_back(succ);
+					}
+					
 				}
 			}
 			

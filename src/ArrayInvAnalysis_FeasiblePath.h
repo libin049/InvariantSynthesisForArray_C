@@ -5,6 +5,8 @@
 #include "FlowSet.h"
 #include "Property.h"
 #include "DataFlowAnalysis_FeasiblePath.h"
+#include "time.h"
+#include <sys/time.h>
 extern  bool occurError;
 
 class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
@@ -20,13 +22,60 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 		void simplifyResult(){
 			for (std::map<CFGBlock*, FlowSet*>::iterator it=mapToBlockIn.begin(); it!=mapToBlockIn.end(); ++it){
 				it->second=simplify(it->second);
+				it->second=exprSetToFlowSet(simplify2(flowSetToExprSet(it->second)));
 				list<pair<CFGBlock*,FlowSet*>*> * outs=mapToBlockOut.at(it->first);
 				for (std::list<pair<CFGBlock*,FlowSet*>*>::iterator outsIt = outs->begin(); 
 						outsIt != outs->end(); outsIt++){
 					pair<CFGBlock*,FlowSet*> *ele=*outsIt;
 					ele->second=simplify(ele->second);
+					//ele->second=exprSetToFlowSet(simplify2(flowSetToExprSet(ele->second)));
 				}
 			}
+		}
+		vector<expr>* simplify2(vector<expr>* fs){
+			vector<expr>* result=new vector<expr>();
+			//vector<expr>* ss=z3coding.filteringLeftSimpleFormula(fs);
+			for(expr e:*fs){
+				if(z3coding.isForAllFormula(e)){
+					expr begin=z3coding.getQuantifierBegin(e);
+					expr end=z3coding.getQuantifierEnd(e);
+					std::string bName=Z3_ast_to_string(c,begin);
+					std::string eName=Z3_ast_to_string(c,end);
+					if(z3coding.equal(begin,end)||bName=="_ret"||eName=="_ret"){
+					
+					}
+					else{
+						result->push_back(e);
+					}
+				}
+				else{
+					result->push_back(e);
+				}
+			}
+			return result;
+		}
+		vector<expr>* simplify3(vector<expr>* fs){
+			vector<expr>* result=new vector<expr>();
+			vector<expr>* ss=z3coding.filteringLeftSimpleFormula(fs);
+			for(expr e:*fs){
+				if(z3coding.isForAllFormula(e)){
+					expr begin=z3coding.getQuantifierBegin(e);
+					expr end=z3coding.getQuantifierEnd(e);
+					std::string bName=Z3_ast_to_string(c,begin);
+					std::string eName=Z3_ast_to_string(c,end);
+					if(z3coding.equal(begin,end)||bName=="_ret"||eName=="_ret"){
+					
+					}
+					else if(z3coding.prove(ss,end>begin)==proved_result::proved){
+						result->push_back(e);
+					}
+					
+				}
+				else{
+					result->push_back(e);
+				}
+			}
+			return result;
 		}
 		/**
 		 * @brief when reach this path, there are path assertions on the path, if they are unsatisfiable, the path is unfeasible;
@@ -49,7 +98,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				return true;
 			}
 		}
-
+		
 		expr reduce(vector<expr> * Pre,expr f){
 			vector<expr>* disjunctionForms=z3coding.DNF(f);
 			vector<expr>* satDisjunctionForms=z3coding.reduction(Pre,disjunctionForms);
@@ -86,16 +135,15 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 			return ret;
 		}
 		FlowSet* merge(vector<FlowSet*>* ins){
+				if(ins->size()==0) return new ValueListSet();
 				FlowSet  *pred_out=ins->at(0);
 				//FlowSet  *merge_result=pred_out->clone();
 				FlowSet  *merge_result=newinitialFlow();
 				copy(pred_out,merge_result);
-				//std::cout<<"pred_out is: ";pred_out->print();
-				
 				for(unsigned i=1;i<ins->size();i++){
 					pred_out=ins->at(i);
-					//std::cout<<"pred_out is: ";pred_out->print();
 					FlowSet *newFlowSet=newinitialFlow();
+					
 					merge(merge_result,pred_out,newFlowSet);
 					merge_result=newFlowSet;
 				}
@@ -111,42 +159,12 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 			#endif
 			doAnalysis();
 			simplifyResult();
+			statistic();
 		}
 		vector<expr> * GenAndKill(vector<expr> * Pre,const clang::Stmt* stmt){
-			//std::cout<<"GenAndKill "<<std::endl;	
-			vector<expr> * exprs=new vector<expr>();
-			switch (stmt->getStmtClass()) {
-				case clang::Stmt::DeclStmtClass:
-					exprs=z3coding.clangDeclStmtToZ3Expr((const clang::DeclStmt*)stmt);
-					break;
-				case clang::Stmt::BinaryOperatorClass:
-					exprs=z3coding.clangBinaryOperatorToZ3Expr((clang::BinaryOperator*)stmt);
-					break;
-				case clang::Stmt::UnaryOperatorClass:
-					exprs=z3coding.clangUnaryOperatorToZ3Expr((clang::UnaryOperator*)stmt);
-					break;
-				case clang::Stmt::ImplicitCastExprClass:
-					{
-						const CastExpr * castExpr=(const CastExpr *)stmt;
-						exprs=z3coding.clangExprToZ3Expr(castExpr->getSubExpr());
-						break;
-					}
-				case clang::Stmt::ReturnStmtClass:
-					{
-						const ReturnStmt * returnStmt=(const ReturnStmt *)stmt;
-						const Expr* retValue=returnStmt->getRetValue();
-						if(retValue!=nullptr){
-							exprs=z3coding.clangExprToZ3Expr(retValue);
-							expr returnExpr=exprs->back();exprs->pop_back();
-							exprs->push_back(z3coding.getRet(returnExpr)==returnExpr);
-						}
-						break;
-					}
-				default:{
-					std::cerr<<"ArrayInvAnalysis_FeasiblePath: We do not consider processing "<<stmt->getStmtClassName()<<std::endl;	
-					occurError=true;
-				}
-
+			vector<expr> * exprs=z3coding.clangStmtToZ3Expr(stmt);
+			if(exprs==nullptr){
+				return new vector<expr>();
 			}
 			z3coding.maintainMemoryUnits();
 			map<std::string,expr> * memoryUnitsMap=z3coding.getMemoryUnits();
@@ -178,9 +196,9 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				std::cout<<"Flow Time1:"<<stop-start<<std::endl;
 				start =time(NULL);
 #endif
-
+				//std::cout<<"befor simplify is: "<<toString(_Pre)<<std::endl;
 				_Pre=z3coding.simplify(_Pre);
-
+				//std::cout<<"after simplify is: "<<toString(_Pre)<<std::endl;
 #ifdef _PERFORMANCE_DEBUG
 				stop = time(NULL);
 				std::cout<<"Flow Time2:"<<stop-start<<std::endl;
@@ -196,72 +214,67 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 		}
 		bool isInFlowThrouth2=false;
 		
+		
+		
 		vector<expr> * GenAndKillTerminator(vector<expr> * Pre,const clang::Stmt* T, bool trueOrFalse){
-			//std::cout<<"GenAndKillTerminator "<<std::endl;
-			vector<expr> * exprs=new vector<expr>();
-			switch (T->getStmtClass()) {
-				case clang::Stmt::DeclStmtClass:
-					exprs=z3coding.clangDeclStmtToZ3Expr((const clang::DeclStmt*)T);
-					break;
-				case clang::Stmt::BinaryOperatorClass:
-					exprs=z3coding.clangBinaryOperatorToZ3Expr((clang::BinaryOperator*)T);
-					break;
-				case clang::Stmt::UnaryOperatorClass:
-					exprs=z3coding.clangUnaryOperatorToZ3Expr((clang::UnaryOperator*)T);
-					break;
-				case clang::Stmt::ImplicitCastExprClass:
-					{
-						const CastExpr * castExpr=(const CastExpr *)T;
-						exprs=z3coding.clangExprToZ3Expr(castExpr->getSubExpr());
-						break;
-					}
-				default:
-					std::cerr<<"GenAndKillTerminator: We do not consider processing "<<T->getStmtClassName()<<std::endl;	
-
+			vector<expr> * exprs=z3coding.clangStmtToZ3Expr(T);
+			if(exprs==nullptr){
+				return new vector<expr>();
 			}
 			z3coding.maintainMemoryUnits();
 			map<std::string,expr> * memoryUnitsMap=z3coding.getMemoryUnits();
 			vector<expr> *formulas=z3coding.boolSortFiltering(exprs);
 			//when T is a&&b,formulas's size will be more than 1
 			//otherwise,formulas's size is equal to 1
-
+			
+			
 			if(formulas->size()<1){
-				std::cerr<<"GenAndKillTerminator: something is wrong! "<<std::endl;	
-			}
-
-			if(trueOrFalse==false){
-				vector<expr> *notFormulas=new vector<expr>();
-				expr ori_formula=formulas->at(0);
-				for(unsigned i=1;i<formulas->size();i++){
-					ori_formula=ori_formula&&formulas->at(i);
+				if(exprs->size()==1) {
+					if(exprs->at(0).is_int()){
+						formulas->push_back(exprs->at(0)!=0);
+					}
 				}
-				notFormulas->push_back(!ori_formula);
-				formulas=notFormulas;
+				else{
+					std::cerr<<"GenAndKillTerminator: something is wrong! "<<std::endl;	
+					return new vector<expr>();
+				}
+			}
+			
+			if(trueOrFalse==false){
+				vector<expr> * conditionFormulas=z3coding.splitLANDFormula(formulas->back());formulas->pop_back();
+				expr ori_formula=conditionFormulas->at(0);
+				for(unsigned i=1;i<conditionFormulas->size();i++){
+					ori_formula=ori_formula&&conditionFormulas->at(i);
+				}
+				formulas->push_back(!ori_formula);
+			}
+			else{
+				vector<expr> * conditionFormulas=z3coding.splitLANDFormula(formulas->back());formulas->pop_back();
+				z3coding.pushAToB(conditionFormulas,formulas); 
 			}
 			//reduce formulas
-
-			vector<expr> * reduceFormulas=reduce(Pre,formulas);
-
-			//std::cout<<mu.toString(reduceFormulas)<<std::endl;
+			
+			vector<expr> * reduceFormulas=reduce(filteringLeftNonForAllFormula(Pre),formulas);
+			
 			if(reduceFormulas->size()==1){
 				if(eq(reduceFormulas->at(0),c.bool_val(false))){
 					return reduceFormulas;
 				}
 			}
 			formulas=reduceFormulas;
-
+			
 			vector<expr> * _Pre=Pre;
 			for(expr f: *formulas){
 #if  defined _DEBUG || defined _PERFORMANCE_DEBUG
-			if(!isInFlowThrouth2){
-				std::cout<<"------------------------------------"<<std::endl;
-				std::cout<<"stmt is: "<<f<<std::endl;
-			}
+				if(!isInFlowThrouth2){
+					std::cout<<"------------------------------------"<<std::endl;
+					std::cout<<"stmt is: "<<f<<std::endl;
+				}
 #endif
 #ifdef _DEBUG
-			if(!isInFlowThrouth2){
-				std::cout<<"Pre is: "<<toString(_Pre)<<std::endl;
-			}
+				if(!isInFlowThrouth2){
+					std::cout<<"Pre is: "<<toString(_Pre)<<std::endl;
+				}
 #endif
 
 #ifdef _PERFORMANCE_DEBUG
@@ -285,14 +298,14 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 #endif
 
 #ifdef _DEBUG
-			if(!isInFlowThrouth2){
-				std::cout<<"Pos is: "<<toString(_Pre)<<std::endl;
-			}
+				if(!isInFlowThrouth2){
+					std::cout<<"Pos is: "<<toString(_Pre)<<std::endl;
+				}
 #endif
 			}
 			return _Pre;
 		}
-		std::string toString(vector<z3::expr>* exprs){
+		/*std::string toString(vector<z3::expr>* exprs){
 			std::string ret="";
 			if(exprs==nullptr) return "";
 			for(auto it=exprs->begin();it!=exprs->end();it++){
@@ -301,7 +314,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				ret+=eName+"; ";
 			}
 			return ret;
-		}
+		}*/
 		std::string toString(vector<FlowSet*>* ins){
 			std::string ret="";
 			if(ins!=nullptr){
@@ -320,6 +333,9 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 		FlowSet * entryInitialFlow(){return new ValueListSet();}
 
 		void merge(FlowSet  * &in1,FlowSet  *&in2,FlowSet  *&out){
+			struct timeval start, end;
+			gettimeofday( &start, NULL );
+			
 #ifdef _PERFORMANCE_DEBUG
 			time_t start,stop;
 			start = time(NULL);
@@ -362,7 +378,10 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 			stop = time(NULL);
 			std::cout<<"Merge Time:"<<stop-start<<std::endl;
 #endif
-
+			//std::cout<<"---------------------meet end--------------"<<std::endl;
+			gettimeofday( &end, NULL );
+				double timeuse = 1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec -start.tv_usec;
+			meetTimeuse+=timeuse;
 			return;
 		}
 		void flowThrouth(CFGBlock*&n, FlowSet *&in, list<pair<CFGBlock*,FlowSet*>*> *&outs){
@@ -409,7 +428,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				ValueListSet *tureFlow=(ValueListSet*)tureBranch->second;
 				pair<CFGBlock*,FlowSet*>* falseBranch=outs->back();
 				ValueListSet *falseFlow=(ValueListSet*)falseBranch->second;
-				if(isFeasiblePath(truePos)){
+				if(isFeasiblePath(filteringLeftNonForAllFormula(truePos) )){
 					//12.30 modify 
 					if(isPointToBack(n)){
 						truePos=backEdgeFilteringOrformula(truePos);
@@ -420,7 +439,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				else{
 					tureBranch->second=&universalSet;
 				}
-				if(isFeasiblePath(falsePos)){
+				if(isFeasiblePath(filteringLeftNonForAllFormula(falsePos))){
 					//12.30 modify 
 					if(isPointToBack(n)){
 						falsePos=backEdgeFilteringOrformula(falsePos);
@@ -460,8 +479,19 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 			stop = time(NULL);
 			std::cout<<"Flow Time:"<<stop-start<<std::endl;
 #endif
+				
+				
 		}
 		
+		vector<expr> * filteringLeftNonForAllFormula(vector<expr> * formulas){
+			vector<expr> * result=new vector<expr>();
+			for(expr e:*formulas){
+				if(!z3coding.isForAllFormula(e)){
+					result->push_back(e);
+				}
+			}
+			return result;
+		}
 		void flowThrouth(CFGBlock *&n, list<FlowSet*> *&ins, list<pair<CFGBlock*,FlowSet*>*> *&outs){
 			isInFlowThrouth2=true;
 #ifdef _PERFORMANCE_DEBUG
@@ -506,10 +536,10 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				
 					vector<expr> * truePos=GenAndKillTerminator(Pre,T,true);
 					vector<expr> * falsePos=GenAndKillTerminator(Pre,T,false);
-					if(isFeasiblePath(truePos)){
+					if(isFeasiblePath(filteringLeftNonForAllFormula(truePos))){
 						trueFeasibleIns->push_back(in);
 					}
-					if(isFeasiblePath(falsePos)){
+					if(isFeasiblePath(filteringLeftNonForAllFormula(falsePos))){
 						falseFeasibleIns->push_back(in);
 					}
 				}
@@ -559,7 +589,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 					vector<expr> * truePos=GenAndKillTerminator(Pre,T,true);
 					pair<CFGBlock*,FlowSet*>* tureBranch=outs->front();
 					ValueListSet *tureFlow=(ValueListSet*)tureBranch->second;
-					if(isFeasiblePath(truePos)){
+					if(isFeasiblePath(filteringLeftNonForAllFormula(truePos))){
 						if(isPointToBack(n)){
 							truePos=backEdgeFilteringOrformula(truePos);
 						}
@@ -602,7 +632,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 					pair<CFGBlock*,FlowSet*>* falseBranch=outs->back();
 					ValueListSet *falseFlow=(ValueListSet*)falseBranch->second;
 				
-					if(isFeasiblePath(falsePos)){
+					if(isFeasiblePath(filteringLeftNonForAllFormula(falsePos))){
 						if(isPointToBack(n)){
 							falsePos=backEdgeFilteringOrformula(falsePos);
 						}
@@ -636,6 +666,16 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 			}
 
 		}
+		//used in dataflow analysis
+	bool equal(FlowSet  *&from,FlowSet  *&to){
+		if(from==&universalSet) {
+			return to==&universalSet;
+		}
+		if(to==&universalSet) {
+			return from==&universalSet;
+		}
+		return from->equal(to);
+	}
 		FlowSet * exprSetToFlowSet(vector<expr> * exprSet){
 			FlowSet * flowSet=new ValueListSet();
 			for(expr e: *exprSet){
@@ -696,41 +736,49 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 #endif
 			vector<expr>* out=new vector<expr>();
 			int count=0;
-			for(expr expr1: *in1){
-				for(expr expr2: *in2){
+			vector<expr>* in1Simples=z3coding.filteringLeftSimpleFormula(in1);
+			vector<expr>* in2Simples=z3coding.filteringLeftSimpleFormula(in2);
+			for(expr expr1: *in1Simples){
+				for(expr expr2: *in2Simples){
 					count++;
-					//					if(in1->size()==74&&in2->size()==113&&count==245){
-					//						std::cout<<in1->size()<<"-------------meet---------"<<in2->size()<<std::endl;
-					//					}
-
-//										std::cout<<expr1<<"-------------meet---------"<<expr2<<std::endl;
-#ifdef _PERFORMANCE_DEBUG
-					time_t start,stop;
-					start = time(NULL);
-#endif
-
+					//std::cout<<expr1<<"-------------meet---------"<<expr2<<std::endl;
 					expr r=mu.meet(new vector<expr>(),expr1,expr2);
-//										std::cout<<"-------------done---------"<<count<<std::endl;
-					//std::cout<<"meetResult:--------------------"<<std::endl;
-#ifdef _PERFORMANCE_DEBUG
-					stop = time(NULL);
-					//ppp(expr1,expr2,stop-start);
-#endif
+					//std::cout<<"-------------done---------"<<count<<std::endl;
 					if(!z3coding.checkError(r)){
 						if(!z3coding.isIn(r,out)){
 							out->push_back(r);
-							break;
+							
 						}
 					}
 				}
 			}
+			
+			vector<expr>* in1NonSimples=z3coding.filteringLeftNonSimpleFormula(in1);
+			vector<expr>* in2NonSimples=z3coding.filteringLeftNonSimpleFormula(in2);
+			for(expr expr1: *in1NonSimples){
+				for(expr expr2: *in2NonSimples){
+					count++;
+					//std::cout<<expr1<<"-------------meet---------"<<expr2<<std::endl;
+					expr r=mu.meet(new vector<expr>(),expr1,expr2);
+					//std::cout<<"-------------done---------"<<count<<std::endl;
+					if(!z3coding.checkError(r)){
+						if(!z3coding.isIn(r,out)){
+							out->push_back(r);
+							if(z3coding.isForAllFormula(expr1)&&z3coding.isForAllFormula(expr2)&&!z3coding.equal(r,z3coding.TRUE)&&!z3coding.equal(r,z3coding.FALSE)){
+								break;
+							}
+						}
+					}
+				}
+			}
+			
 			return out;
 		}
 		FlowSet * meet(FlowSet * in1, FlowSet *in2){
 			vector<expr>* outexpr=meet(flowSetToExprSet(in1),flowSetToExprSet(in2));
 			return exprSetToFlowSet(outexpr);
 		}
-		Formula* meet(vector<expr> *Pre, Formula *f1,Formula *f2){
+		/*Formula* meet(vector<expr> *Pre, Formula *f1,Formula *f2){
 			expr e1=f1->formula;
 			expr e2=f2->formula;
 
@@ -740,7 +788,7 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 				return nullptr;
 			}
 			return new Formula(meetResult);
-		}
+		}*/
 
 		
 		
@@ -797,5 +845,62 @@ class ArrayInvAnalysis_FeasiblePath: public IntraDataFlowAnalysis_FeasiblePath{
 			return &propertyCollecter;
 		}
 		#endif
+		int forAllFormulaCount=0;
+		int simpleFormulaCount=0;
+		int blockCount=0;
+		double meetTimeuse;
+		int statisticForAllFormula(FlowSet* S){
+			vector<expr>* v=flowSetToExprSet(S);
+			int count=0;
+			for(expr e:*v){
+				if(z3coding.isForAllFormula(e)){
+					count++;
+				}
+			}
+			return count;
+		}
+		int statisticSimpleFormula(FlowSet* S){
+			vector<expr>* v=flowSetToExprSet(S);
+			int count=0;
+			for(expr e:*v){
+				if(z3coding.isSimpleFormula(e)){
+					count++;
+				}
+			}
+			return count;
+		}
+		void statistic(){
+			for (std::map<CFGBlock*, FlowSet*>::iterator it=mapToBlockIn.begin(); it!=mapToBlockIn.end(); ++it){
+				forAllFormulaCount+=statisticForAllFormula(it->second);
+				simpleFormulaCount+=statisticSimpleFormula(it->second);
+				blockCount++;
+			}
+		}
+		std::string toString(vector<z3::expr>* exprs){
+			std::string ret="";
+			if(exprs==nullptr) return "";
+			for(auto it=exprs->begin();it!=exprs->end();it++){
+				z3::expr e=(z3::expr) *it;
+				
+				std::string eName=z3coding.toString(e);
+				ret+=eName+";\n ";
+			}
+			return ret;
+		}
+	void print(){
+		for (std::map<CFGBlock*, FlowSet*>::iterator it=mapToBlockIn.begin(); it!=mapToBlockIn.end(); ++it){
+			std::cout <<"--------[B"<< it->first->getBlockID ()<<"]" << " in :--------"<<std::endl; 
+			std::cout<<toString(flowSetToExprSet(it->second))<<std::endl;
+			list<pair<CFGBlock*,FlowSet*>*> * outs=mapToBlockOut.at(it->first);
+			for (std::list<pair<CFGBlock*,FlowSet*>*>::iterator outsIt = outs->begin(); 
+									outsIt != outs->end(); outsIt++){
+				pair<CFGBlock*,FlowSet*> *ele=*outsIt;
+				if(ele->first==nullptr) continue;
+				std::cout <<"----------[B"<< it->first->getBlockID()<<"]"<<"-> [B" <<ele->first->getBlockID()<<"]"<<" out -------:"<<std::endl; 
+				std::cout<<toString(flowSetToExprSet(ele->second))<<std::endl;
+			}
+		}
+
+	}
 };
 #endif

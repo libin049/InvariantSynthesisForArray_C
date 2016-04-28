@@ -1,0 +1,552 @@
+2
+--------------------printcfgZ3Codes result--------------------
+----------------------------------------------
+[B0]::
+----------------------------------------------
+[B1]::
+(= _ret dest); 
+----------------------------------------------
+[B2]::
+----------------------------------------------
+[B3]::
+(= tmp_index__prime (+ tmp_index 1)); tmp; 
+(= count__prime (- count 1)); count; 
+----------------------------------------------
+[B4]::
+(= src_index__prime (+ src_index 1)); src; 
+----------------------------------------------
+[B5]::
+(= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+----------------------------------------------
+[B6]::
+count; 
+----------------------------------------------
+[B7]::
+(= dest_index__prime 0); 
+(= src_index__prime 0); 
+(= count__prime 100); 
+(= tmp_initbase__prime dest_initbase); (= tmp_index__prime dest_index); 
+----------------------------------------------
+[B8]::
+--------------------printcfgGhostZ3Codes result--------------------
+----------------------------------------------
+[B0]::
+----------------------------------------------
+[B1]::
+(= _ret dest); 
+----------------------------------------------
+[B2]::
+(= i7_2__prime (+ i7_2 1)); 
+----------------------------------------------
+[B3]::
+(= tmp_index__prime (+ tmp_index 1)); tmp; 
+(= count__prime (- count 1)); count; 
+----------------------------------------------
+[B4]::
+(= src_index__prime (+ src_index 1)); src; 
+----------------------------------------------
+[B5]::
+(= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+----------------------------------------------
+[B6]::
+count; 
+----------------------------------------------
+[B7]::
+(= dest_index__prime 0); (= i7_2__prime 0); 
+(= src_index__prime 0); 
+(= count__prime 100); 
+(= tmp_initbase__prime dest_initbase); (= tmp_index__prime dest_index); 
+----------------------------------------------
+[B8]::
+workList is :[B8] [B7] [B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B8]-------------
+workList is :[B7] [B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B7]-------------
+Pre is: 
+stmt is: char *dest;
+
+z3codes is: (= dest_index__prime 0); (= i7_2__prime 0); 
+gen: init Stmt: (= dest_index__prime 0)
+gen: init Stmt: (= i7_2__prime 0)
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] 
+stmt is: const char *src;
+
+z3codes is: (= src_index__prime 0); 
+gen: init Stmt: (= src_index__prime 0)
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] 
+stmt is: int count = 100;
+
+z3codes is: (= count__prime 100); 
+gen: init Stmt: (= count__prime 100)
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] 
+stmt is: char *tmp = dest;
+
+z3codes is: (= tmp_initbase__prime dest_initbase); (= tmp_index__prime dest_index); 
+gen: init Stmt: (= tmp_initbase__prime dest_initbase)
+gen: init Stmt: (= tmp_index__prime dest_index)
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+workList is :[B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B6]-------------
+-----------process [B6]-------------
+universalSet merge [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+stmt is: count
+z3codes is: count; 
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+workList is :[B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B5]-------------
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+stmt is: (*tmp = *src) != 0
+z3codes is: (= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+workList is :[B4] [B3] [B1] [B0] [B2] 
+-----------process [B4]-------------
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+stmt is: src++
+z3codes is: (= src_index__prime (+ src_index 1)); src; 
+gen: init Stmt: (= src_index__prime 0), step: 1
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] [init Stmt: (= src_index__prime 0), step: 1] 
+workList is :[B3] [B1] [B0] [B2] 
+-----------process [B3]-------------
+[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] [init Stmt: (= src_index__prime 0), step: 1] --- merge---[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index)] [init Stmt: (= src_index__prime 0), step: 1] 
+stmt is: tmp++
+z3codes is: (= tmp_index__prime (+ tmp_index 1)); tmp; 
+gen: init Stmt: (= tmp_index__prime dest_index), step: 1
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= count__prime 100)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+stmt is: count--
+z3codes is: (= count__prime (- count 1)); count; 
+gen: init Stmt: (= count__prime 100), step: (- 1)
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+workList is :[B2] [B1] [B0] 
+-----------process [B2]-------------
+z3codes is: (= i7_2__prime (+ i7_2 1)); 
+gen: init Stmt: (= i7_2__prime 0), step: 1
+workList is :[B6] [B1] [B0] 
+-----------process [B6]-------------
+-----------process [B6]-------------
+[init Stmt: (= dest_index__prime 0)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= i7_2__prime 0), step: 1] --- merge---[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+stmt is: count
+z3codes is: count; 
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+workList is :[B1] [B0] 
+-----------process [B1]-------------
+Pre is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+stmt is: return dest;
+
+z3codes is: (= _ret dest); 
+Pos is: [init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+workList is :[B0] 
+-----------process [B0]-------------
+--------------------Atom result--------------------
+[B0] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B1] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B1]-> [B0] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B2] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B2]-> [B6] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= i7_2__prime 0), step: 1] 
+[B3] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] 
+[B3]-> [B2] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B4] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+[B4]-> [B3] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] 
+[B5] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+[B5]-> [B4] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+[B5]-> [B3] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+[B6] in :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B6]-> [B5] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B6]-> [B1] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] 
+[B7] in :
+[B7]-> [B6] out :[init Stmt: (= dest_index__prime 0)] [init Stmt: (= i7_2__prime 0), step: 1] [init Stmt: (= src_index__prime 0), step: 1] [init Stmt: (= count__prime 100), step: (- 1)] [init Stmt: (= tmp_initbase__prime dest_initbase)] [init Stmt: (= tmp_index__prime dest_index), step: 1] 
+[B8] in :
+[B8]-> [B7] out :
+workList is :[B8] [B7] [B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B8]-------------
+workList is :[B7] [B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B7]-------------
+Pre is: 
+stmt is: char *dest;
+
+z3codes is: (= dest_index__prime 0); (= i7_2__prime 0); 
+gen: i7_2 is init
+Pos is: [i7_2] 
+Pre is: [i7_2] 
+stmt is: const char *src;
+
+z3codes is: (= src_index__prime 0); 
+gen: src_index is init
+Pos is: [i7_2] [src_index] 
+Pre is: [i7_2] [src_index] 
+stmt is: int count = 100;
+
+z3codes is: (= count__prime 100); 
+gen: count is init
+Pos is: [i7_2] [src_index] [count] 
+Pre is: [i7_2] [src_index] [count] 
+stmt is: char *tmp = dest;
+
+z3codes is: (= tmp_initbase__prime dest_initbase); (= tmp_index__prime dest_index); 
+gen: tmp_index is init
+Pos is: [i7_2] [src_index] [count] [tmp_index] 
+workList is :[B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B6]-------------
+-----------process [B6]-------------
+universalSet merge [i7_2] [src_index] [count] [tmp_index] 
+Pre is: [i7_2] [src_index] [count] [tmp_index] 
+stmt is: count
+z3codes is: count; 
+Pos is: [i7_2] [src_index] [count] [tmp_index] 
+workList is :[B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B5]-------------
+Pre is: [i7_2] [src_index] [count] [tmp_index] 
+stmt is: (*tmp = *src) != 0
+z3codes is: (= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+Pos is: [i7_2] [src_index] [count] [tmp_index] 
+workList is :[B4] [B3] [B1] [B0] [B2] 
+-----------process [B4]-------------
+Pre is: [i7_2] [src_index] [count] [tmp_index] 
+stmt is: src++
+z3codes is: (= src_index__prime (+ src_index 1)); src; 
+kill: src_index is to update
+[i7_2] [count] [tmp_index] 
+Pos is: [i7_2] [count] [tmp_index] 
+workList is :[B3] [B1] [B0] [B2] 
+-----------process [B3]-------------
+[i7_2] [count] [tmp_index] --- merge---[i7_2] [src_index] [count] [tmp_index] 
+Pre is: [i7_2] [count] [tmp_index] 
+stmt is: tmp++
+z3codes is: (= tmp_index__prime (+ tmp_index 1)); tmp; 
+kill: tmp_index is to update
+[i7_2] [count] 
+Pos is: [i7_2] [count] 
+Pre is: [i7_2] [count] 
+stmt is: count--
+z3codes is: (= count__prime (- count 1)); count; 
+kill: count is to update
+[i7_2] 
+Pos is: [i7_2] 
+workList is :[B2] [B1] [B0] 
+-----------process [B2]-------------
+z3codes is: (= i7_2__prime (+ i7_2 1)); 
+kill: i7_2 is to update
+
+workList is :[B6] [B1] [B0] 
+-----------process [B6]-------------
+-----------process [B6]-------------
+--- merge---[i7_2] [src_index] [count] [tmp_index] 
+Pre is: 
+stmt is: count
+z3codes is: count; 
+Pos is: 
+workList is :[B5] [B1] [B0] 
+-----------process [B5]-------------
+Pre is: 
+stmt is: (*tmp = *src) != 0
+z3codes is: (= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+Pos is: 
+workList is :[B4] [B3] [B1] [B0] 
+-----------process [B4]-------------
+Pre is: 
+stmt is: src++
+z3codes is: (= src_index__prime (+ src_index 1)); src; 
+Pos is: 
+workList is :[B3] [B1] [B0] 
+-----------process [B3]-------------
+--- merge---
+Pre is: 
+stmt is: tmp++
+z3codes is: (= tmp_index__prime (+ tmp_index 1)); tmp; 
+Pos is: 
+Pre is: 
+stmt is: count--
+z3codes is: (= count__prime (- count 1)); count; 
+Pos is: 
+workList is :[B2] [B1] [B0] 
+-----------process [B2]-------------
+z3codes is: (= i7_2__prime (+ i7_2 1)); 
+workList is :[B1] [B0] 
+-----------process [B1]-------------
+Pre is: 
+stmt is: return dest;
+
+z3codes is: (= _ret dest); 
+Pos is: 
+workList is :[B0] 
+-----------process [B0]-------------
+--------------------stmt avinit analysis result--------------------
+char *dest;
+ in :
+char *dest;
+ out :[i7_2] 
+const char *src;
+ in :[i7_2] 
+const char *src;
+ out :[i7_2] [src_index] 
+int count = 100;
+ in :[i7_2] [src_index] 
+int count = 100;
+ out :[i7_2] [src_index] [count] 
+char *tmp = dest;
+ in :[i7_2] [src_index] [count] 
+char *tmp = dest;
+ out :[i7_2] [src_index] [count] [tmp_index] 
+count in :
+count out :
+(*tmp = *src) != 0 in :
+(*tmp = *src) != 0 out :
+src++ in :
+src++ out :
+tmp++ in :
+tmp++ out :
+count-- in :
+count-- out :
+return dest;
+ in :
+return dest;
+ out :
+workList is :[B8] [B7] [B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B8]-------------
+workList is :[B7] [B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B7]-------------
+-------------------------------------
+Pre is: 
+stmt is: char *dest;
+
+z3codes is: (= dest_index__prime 0); (= i7_2__prime 0); 
+Pos is: 
+-------------------------------------
+Pre is: 
+stmt is: const char *src;
+
+z3codes is: (= src_index__prime 0); 
+gen: src_index-i7_2=0
+Pos is: [src_index-i7_2=0] 
+-------------------------------------
+Pre is: [src_index-i7_2=0] 
+stmt is: int count = 100;
+
+z3codes is: (= count__prime 100); 
+gen: count-i7_2=0
+gen: count-src_index=0
+Pos is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] 
+-------------------------------------
+Pre is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] 
+stmt is: char *tmp = dest;
+
+z3codes is: (= tmp_initbase__prime dest_initbase); (= tmp_index__prime dest_index); 
+gen: tmp_index-i7_2=0
+gen: tmp_index-src_index=0
+gen: tmp_index-count=0
+Pos is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+workList is :[B6] [B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B6]-------------
+-----------process [B6]-------------
+universalSet merge [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+-------------------------------------
+Pre is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+stmt is: count
+z3codes is: count; 
+Pos is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+workList is :[B5] [B1] [B4] [B3] [B0] [B2] 
+-----------process [B5]-------------
+-------------------------------------
+Pre is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+stmt is: (*tmp = *src) != 0
+z3codes is: (= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+Pos is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+workList is :[B4] [B3] [B1] [B0] [B2] 
+-----------process [B4]-------------
+-------------------------------------
+Pre is: [src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+stmt is: src++
+z3codes is: (= src_index__prime (+ src_index 1)); src; 
+src_index
+src_index
+diff update: src_index-i7_2=1
+i7_2
+count
+i7_2
+count
+src_index
+diff update: count-src_index=-1
+tmp_index
+i7_2
+tmp_index
+src_index
+diff update: tmp_index-src_index=-1
+tmp_index
+count
+Pos is: [count-i7_2=0] [tmp_index-i7_2=0] [tmp_index-count=0] [src_index-i7_2=1] [count-src_index=-1] [tmp_index-src_index=-1] 
+workList is :[B3] [B1] [B0] [B2] 
+-----------process [B3]-------------
+[count-i7_2=0] [tmp_index-i7_2=0] [tmp_index-count=0] [src_index-i7_2=1] [count-src_index=-1] [tmp_index-src_index=-1] --- merge---[src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+-------------------------------------
+Pre is: [count-i7_2=0] [tmp_index-i7_2=0] [tmp_index-count=0] 
+stmt is: tmp++
+z3codes is: (= tmp_index__prime (+ tmp_index 1)); tmp; 
+tmp_index
+count
+i7_2
+tmp_index
+diff update: tmp_index-i7_2=1
+i7_2
+tmp_index
+diff update: tmp_index-count=1
+count
+Pos is: [count-i7_2=0] [tmp_index-i7_2=1] [tmp_index-count=1] 
+-------------------------------------
+Pre is: [count-i7_2=0] [tmp_index-i7_2=1] [tmp_index-count=1] 
+stmt is: count--
+z3codes is: (= count__prime (- count 1)); count; 
+count
+count
+diff update: count-i7_2=1
+i7_2
+tmp_index
+i7_2
+tmp_index
+count
+diff update: tmp_index-count=0
+Pos is: [tmp_index-i7_2=1] [count-i7_2=1] [tmp_index-count=0] 
+workList is :[B2] [B1] [B0] 
+-----------process [B2]-------------
+-------------------------------------
+Pre is: [tmp_index-i7_2=1] [count-i7_2=1] [tmp_index-count=0] 
+stmt is empty 
+z3codes is: (= i7_2__prime (+ i7_2 1)); 
+i7_2
+tmp_index
+i7_2
+diff update: tmp_index-i7_2=0
+count
+i7_2
+diff update: count-i7_2=0
+tmp_index
+count
+Pos is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+workList is :[B6] [B1] [B0] 
+-----------process [B6]-------------
+-----------process [B6]-------------
+[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] --- merge---[src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+-------------------------------------
+Pre is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+stmt is: count
+z3codes is: count; 
+Pos is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+workList is :[B5] [B1] [B0] 
+-----------process [B5]-------------
+-------------------------------------
+Pre is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+stmt is: (*tmp = *src) != 0
+z3codes is: (= (select tmp_initbase__prime tmp_index) (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+Pos is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+workList is :[B4] [B3] [B1] [B0] 
+-----------process [B4]-------------
+-------------------------------------
+Pre is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+stmt is: src++
+z3codes is: (= src_index__prime (+ src_index 1)); src; 
+src_index
+tmp_index
+count
+tmp_index
+i7_2
+count
+i7_2
+Pos is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+workList is :[B3] [B1] [B0] 
+-----------process [B3]-------------
+[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] --- merge---[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+-------------------------------------
+Pre is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+stmt is: tmp++
+z3codes is: (= tmp_index__prime (+ tmp_index 1)); tmp; 
+tmp_index
+tmp_index
+diff update: tmp_index-count=1
+count
+tmp_index
+diff update: tmp_index-i7_2=1
+i7_2
+count
+i7_2
+Pos is: [count-i7_2=0] [tmp_index-count=1] [tmp_index-i7_2=1] 
+-------------------------------------
+Pre is: [count-i7_2=0] [tmp_index-count=1] [tmp_index-i7_2=1] 
+stmt is: count--
+z3codes is: (= count__prime (- count 1)); count; 
+count
+count
+diff update: count-i7_2=1
+i7_2
+tmp_index
+count
+diff update: tmp_index-count=0
+tmp_index
+i7_2
+Pos is: [tmp_index-i7_2=1] [count-i7_2=1] [tmp_index-count=0] 
+workList is :[B1] [B0] 
+-----------process [B1]-------------
+-------------------------------------
+Pre is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+stmt is: return dest;
+
+z3codes is: (= _ret dest); 
+Pos is: [tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+workList is :[B0] 
+-----------process [B0]-------------
+--------------------AtomDiff result--------------------
+[B0] in :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B1] in :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B1]-> [B0] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B2] in :[tmp_index-i7_2=1] [count-i7_2=1] [tmp_index-count=0] 
+[B2]-> [B6] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B3] in :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B3]-> [B2] out :[tmp_index-i7_2=1] [count-i7_2=1] [tmp_index-count=0] 
+[B4] in :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B4]-> [B3] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B5] in :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B5]-> [B4] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B5]-> [B3] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B6] in :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B6]-> [B5] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B6]-> [B1] out :[tmp_index-count=0] [tmp_index-i7_2=0] [count-i7_2=0] 
+[B7] in :
+[B7]-> [B6] out :[src_index-i7_2=0] [count-i7_2=0] [count-src_index=0] [tmp_index-i7_2=0] [tmp_index-src_index=0] [tmp_index-count=0] 
+[B8] in :
+[B8]-> [B7] out :
+--------------------Normalization result--------------------
+----------------------------------------------
+[B0]::
+----------------------------------------------
+[B1]::
+(= _ret dest); 
+----------------------------------------------
+[B2]::
+(= i7_2__prime (+ i7_2 1)); 
+----------------------------------------------
+[B3]::
+(= tmp_index__prime (+ i7_2 dest_index 1)); tmp; 
+(= count__prime (- count 1)); count; 
+----------------------------------------------
+[B4]::
+(= src_index__prime (+ src_index 1)); src; 
+----------------------------------------------
+[B5]::
+(= (select tmp_initbase__prime (+ i7_2 dest_index))
+   (select src_initbase src_index)); (distinct (select src_initbase src_index) 0); 
+----------------------------------------------
+[B6]::
+count; 
+----------------------------------------------
+[B7]::
+(= dest_index__prime 0); (= i7_2__prime 0); 
+(= src_index__prime 0); 
+(= count__prime 100); 
+(= tmp_initbase__prime dest_initbase); (= tmp_index__prime dest_index); 
+----------------------------------------------
+[B8]::
+0  0.000000 0  0  0  

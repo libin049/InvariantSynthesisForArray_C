@@ -1,0 +1,1953 @@
+*******************process function::  main***************
+workList is :[B17] [B16] [B15] [B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B17]-------------
+workList is :[B16] [B15] [B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B16]-------------
+Pre is: 
+stmt is: int i;
+
+Pos is: 
+Pre is: 
+stmt is: int n = 100000;
+
+gen: init Stmt: (= n__prime 100000)
+Pos is: [init Stmt: (= n__prime 100000)] 
+Pre is: [init Stmt: (= n__prime 100000)] 
+stmt is: int pos;
+
+Pos is: 
+Pre is: 
+stmt is: int element;
+
+Pos is: 
+Pre is: 
+stmt is: int found = 0;
+
+gen: init Stmt: (= found__prime 0)
+Pos is: [init Stmt: (= found__prime 0)] 
+Pre is: [init Stmt: (= found__prime 0)] 
+stmt is: n
+Pos is: 
+Pre is: 
+stmt is: int vectorx[n];
+
+Pos is: 
+Pre is: 
+stmt is: i = 0
+gen: init Stmt: (= i__prime 0)
+Pos is: [init Stmt: (= i__prime 0)] 
+workList is :[B15] [B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B15]-------------
+universalSet merge [init Stmt: (= i__prime 0)] 
+Pre is: [init Stmt: (= i__prime 0)] 
+stmt is: i < n
+Pos is: [init Stmt: (= i__prime 0)] 
+workList is :[B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B14]-------------
+Pre is: [init Stmt: (= i__prime 0)] 
+stmt is: !found
+Pos is: [init Stmt: (= i__prime 0)] 
+workList is :[B13] [B10] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B13]-------------
+Pre is: [init Stmt: (= i__prime 0)] 
+stmt is: vectorx[i] == element
+Pos is: [init Stmt: (= i__prime 0)] 
+workList is :[B12] [B11] [B10] [B9] [B5] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B12]-------------
+Pre is: [init Stmt: (= i__prime 0)] 
+stmt is: found = 1
+gen: init Stmt: (= found__prime 1)
+Pos is: [init Stmt: (= i__prime 0)] [init Stmt: (= found__prime 1)] 
+Pre is: [init Stmt: (= i__prime 0)] [init Stmt: (= found__prime 1)] 
+stmt is: pos = i
+gen: init Stmt: (= pos__prime i)
+Pos is: [init Stmt: (= i__prime 0)] [init Stmt: (= found__prime 1)] [init Stmt: (= pos__prime i)] 
+workList is :[B11] [B10] [B9] [B5] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B11]-------------
+[init Stmt: (= i__prime 0)] [init Stmt: (= found__prime 1)] [init Stmt: (= pos__prime i)] --- merge---[init Stmt: (= i__prime 0)] 
+Pre is: [init Stmt: (= i__prime 0)] 
+stmt is: i++
+gen: init Stmt: (= i__prime 0), step: 1
+Pos is: [init Stmt: (= i__prime 0), step: 1] 
+workList is :[B15] [B10] [B9] [B5] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B15]-------------
+[init Stmt: (= i__prime 0), step: 1] --- merge---[init Stmt: (= i__prime 0), step: 1] 
+Pre is: [init Stmt: (= i__prime 0), step: 1] 
+stmt is: i < n
+Pos is: [init Stmt: (= i__prime 0), step: 1] 
+workList is :[B10] [B9] [B5] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B10]-------------
+[init Stmt: (= i__prime 0), step: 1] --- merge---[init Stmt: (= i__prime 0), step: 1] 
+Pre is: [init Stmt: (= i__prime 0), step: 1] 
+stmt is: found
+Pos is: 
+workList is :[B9] [B5] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B9]-------------
+Pre is: 
+stmt is: i = pos
+gen: init Stmt: (= i__prime pos)
+Pos is: [init Stmt: (= i__prime pos)] 
+workList is :[B8] [B5] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B8]-------------
+universalSet merge [init Stmt: (= i__prime pos)] 
+Pre is: [init Stmt: (= i__prime pos)] 
+stmt is: i < n - 1
+Pos is: [init Stmt: (= i__prime pos)] 
+workList is :[B7] [B5] [B4] [B1] [B3] [B0] [B6] [B2] 
+-----------process [B7]-------------
+Pre is: [init Stmt: (= i__prime pos)] 
+stmt is: vectorx[i] = vectorx[i + 1]
+Pos is: [init Stmt: (= i__prime pos)] 
+workList is :[B6] [B5] [B4] [B1] [B3] [B0] [B2] 
+-----------process [B6]-------------
+Pre is: [init Stmt: (= i__prime pos)] 
+stmt is: i++
+gen: init Stmt: (= i__prime pos), step: 1
+Pos is: [init Stmt: (= i__prime pos), step: 1] 
+workList is :[B8] [B5] [B4] [B1] [B3] [B0] [B2] 
+-----------process [B8]-------------
+[init Stmt: (= i__prime pos), step: 1] --- merge---[init Stmt: (= i__prime pos), step: 1] 
+Pre is: [init Stmt: (= i__prime pos), step: 1] 
+stmt is: i < n - 1
+Pos is: [init Stmt: (= i__prime pos), step: 1] 
+workList is :[B5] [B4] [B1] [B3] [B0] [B2] 
+-----------process [B5]-------------
+[init Stmt: (= i__prime pos), step: 1] --- merge---
+Pre is: 
+stmt is: found
+Pos is: 
+workList is :[B4] [B1] [B3] [B0] [B2] 
+-----------process [B4]-------------
+Pre is: 
+stmt is: int x;
+
+Pos is: 
+Pre is: 
+stmt is: x = 0
+gen: init Stmt: (= x__prime 0)
+Pos is: [init Stmt: (= x__prime 0)] 
+workList is :[B3] [B1] [B0] [B2] 
+-----------process [B3]-------------
+universalSet merge [init Stmt: (= x__prime 0)] 
+Pre is: [init Stmt: (= x__prime 0)] 
+stmt is: x < pos
+Pos is: [init Stmt: (= x__prime 0)] 
+workList is :[B2] [B1] [B0] 
+-----------process [B2]-------------
+Pre is: [init Stmt: (= x__prime 0)] 
+stmt is: x++
+gen: init Stmt: (= x__prime 0), step: 1
+Pos is: [init Stmt: (= x__prime 0), step: 1] 
+workList is :[B3] [B1] [B0] 
+-----------process [B3]-------------
+[init Stmt: (= x__prime 0), step: 1] --- merge---[init Stmt: (= x__prime 0), step: 1] 
+Pre is: [init Stmt: (= x__prime 0), step: 1] 
+stmt is: x < pos
+Pos is: [init Stmt: (= x__prime 0), step: 1] 
+workList is :[B1] [B0] 
+-----------process [B1]-------------
+[init Stmt: (= x__prime 0), step: 1] --- merge---
+Pre is: 
+stmt is: return 0;
+
+Pos is: 
+workList is :[B0] 
+-----------process [B0]-------------
+workList is :[B17] [B16] [B15] [B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B17]-------------
+pre is
+
+workList is :[B16] [B15] [B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B16]-------------
+merge_result is: 
+pre is
+
+------------------------------------
+stmt is: (= n__prime 100000)
+Pre is: 
+Pos is: (= n 100000); (= 100000 n); 
+------------------------------------
+stmt is: (= found__prime 0)
+Pre is: (= n 100000); (= 100000 n); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); 
+------------------------------------
+stmt is: (= i__prime 0)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); 
+workList is :[B15] [B14] [B10] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B15]-------------
+universalSet merge [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] 
+(< i n); 
+(not (< i n)); 
+(< i n); 
+false; 
+(< i n); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+(not (< i n)); 
+------------------------------------
+stmt is: (not (< i n))
+Pre is: 
+Pos is: (<= n i); 
+workList is :[B10] [B14] [B13] [B9] [B5] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B10]-------------
+universalSet merge [(<= n i)] 
+merge_result is: [(<= n i)] 
+(not (= found 0)); 
+(= found 0); 
+(not (= found 0)); 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (<= n i); 
+Pos is: (<= n i); (not (= found 0)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (<= n i); 
+Pos is: (<= n i); (= found 0); (= 0 found); 
+workList is :[B5] [B9] [B14] [B13] [B12] [B11] [B8] [B4] [B1] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B5]-------------
+universalSet merge [(<= n i)] [(= found 0)] [(= 0 found)] 
+merge_result is: [(<= n i)] [(= found 0)] [(= 0 found)] 
+(not (= found 0)); 
+(= found 0); 
+false; 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: 
+Pos is: (not (= found 0)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (<= n i); (= found 0); (= 0 found); 
+Pos is: (<= n i); (= found 0); (= 0 found); 
+workList is :[B1] [B4] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B3] [B0] [B6] [B2] 
+-----------process [B1]-------------
+universalSet merge [(<= n i)] [(= found 0)] [(= 0 found)] 
+merge_result is: [(<= n i)] [(= found 0)] [(= 0 found)] 
+pre is
+[(<= n i)] [(= found 0)] [(= 0 found)] 
+------------------------------------
+stmt is: (= _ret 0)
+Pre is: (<= n i); (= found 0); (= 0 found); 
+Pos is: (<= n i); (= found 0); (= 0 found); (= _ret 0); (= _ret found); (= found _ret); (= 0 _ret); 
+workList is :[B0] [B4] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B3] [B6] [B2] 
+-----------process [B0]-------------
+merge_result is: [(<= n i)] [(= found 0)] [(= 0 found)] [(= _ret 0)] [(= _ret found)] [(= found _ret)] [(= 0 _ret)] 
+pre is
+[(<= n i)] [(= found 0)] [(= 0 found)] [(= _ret 0)] [(= _ret found)] [(= found _ret)] [(= 0 _ret)] 
+workList is :[B4] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B3] [B6] [B2] 
+-----------process [B4]-------------
+merge_result is: [(not (= found 0))] 
+pre is
+[(not (= found 0))] 
+------------------------------------
+stmt is: (= x__prime 0)
+Pre is: (not (= found 0)); 
+Pos is: (not (= found 0)); (= x 0); (= 0 x); (phi x 0 1); 
+workList is :[B3] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] [B2] 
+-----------process [B3]-------------
+universalSet merge [(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] 
+merge_result is: [(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+------------------------------------
+stmt is: (< x pos)
+Pre is: (not (= found 0)); (= x 0); (= 0 x); (phi x 0 1); 
+Pos is: (not (= found 0)); (= x 0); (= 0 x); (phi x 0 1); (> pos x); (> pos 0); 
+(not (< x pos)); 
+------------------------------------
+stmt is: (not (< x pos))
+Pre is: (not (= found 0)); (= x 0); (= 0 x); (phi x 0 1); 
+Pos is: (not (= found 0)); (= x 0); (= 0 x); (phi x 0 1); (<= pos x); (<= pos 0); 
+workList is :[B1] [B2] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B1]-------------
+[(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] [(<= pos x)] [(<= pos 0)]  ---merge--- [(<= n i)] [(= found 0)] [(= 0 found)] 
+merge_result is: [true] 
+pre is
+[true] 
+------------------------------------
+stmt is: (= _ret 0)
+Pre is: true; 
+Pos is: (= _ret 0); (= 0 _ret); 
+workList is :[B0] [B2] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B0]-------------
+merge_result is: [(= _ret 0)] [(= 0 _ret)] 
+pre is
+[(= _ret 0)] [(= 0 _ret)] 
+workList is :[B2] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B2]-------------
+merge_result is: [(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] [(> pos x)] [(> pos 0)] 
+pre is
+[(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] [(> pos x)] [(> pos 0)] 
+------------------------------------
+stmt is: (= x__prime (+ x 1))
+Pre is: (not (= found 0)); (= x 0); (= 0 x); (phi x 0 1); (> pos x); (> pos 0); 
+Pos is: (not (= found 0)); (> pos 0); (phi x 0 1); 
+workList is :[B3] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B3]-------------
+[(not (= found 0))] [(> pos 0)] [(phi x 0 1)]  ---merge--- [(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] 
+merge_result is: [(not (= found 0))] [(phi x 0 1)] 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+------------------------------------
+stmt is: (< x pos)
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (> pos x); 
+(not (< x pos)); 
+------------------------------------
+stmt is: (not (< x pos))
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (<= pos x); 
+workList is :[B1] [B2] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B1]-------------
+[(not (= found 0))] [(phi x 0 1)] [(<= pos x)]  ---merge--- [(<= n i)] [(= found 0)] [(= 0 found)] 
+merge_result is: [true] 
+pre is
+[true] 
+------------------------------------
+stmt is: (= _ret 0)
+Pre is: true; 
+Pos is: (= _ret 0); (= 0 _ret); 
+workList is :[B2] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B2]-------------
+merge_result is: [(not (= found 0))] [(phi x 0 1)] [(> pos x)] 
+pre is
+[(not (= found 0))] [(phi x 0 1)] [(> pos x)] 
+------------------------------------
+stmt is: (= x__prime (+ x 1))
+Pre is: (not (= found 0)); (phi x 0 1); (> pos x); 
+Pos is: (not (= found 0)); (phi x 0 1); 
+workList is :[B3] [B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B3]-------------
+[(not (= found 0))] [(phi x 0 1)]  ---merge--- [(not (= found 0))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] 
+merge_result is: [(not (= found 0))] [(phi x 0 1)] 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+------------------------------------
+stmt is: (< x pos)
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (> pos x); 
+(not (< x pos)); 
+------------------------------------
+stmt is: (not (< x pos))
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (<= pos x); 
+workList is :[B9] [B14] [B13] [B12] [B11] [B8] [B7] [B6] 
+-----------process [B9]-------------
+merge_result is: [(<= n i)] [(not (= found 0))] 
+pre is
+[(<= n i)] [(not (= found 0))] 
+------------------------------------
+stmt is: (= i__prime pos)
+Pre is: (<= n i); (not (= found 0)); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+workList is :[B8] [B14] [B13] [B12] [B11] [B7] [B6] 
+-----------process [B8]-------------
+universalSet merge [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] 
+merge_result is: [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] 
+(< i (- n 1)); 
+(not (< i (- n 1))); 
+(< i (- n 1)); 
+(not (< i (- n 1))); 
+(< i (- n 1)); 
+------------------------------------
+stmt is: (< i (- n 1))
+Pre is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (> (+ (- 1) n) i); (> (+ (- 1) n) pos); 
+(not (< i (- n 1))); 
+------------------------------------
+stmt is: (not (< i (- n 1)))
+Pre is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+workList is :[B5] [B7] [B14] [B13] [B12] [B11] [B6] 
+-----------process [B5]-------------
+[(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))]  ---merge--- [(<= n i)] [(= found 0)] [(= 0 found)] 
+merge_result is: [true] [(<= n (+ 1 i))] 
+(not (= found 0)); 
+false; 
+false; 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (<= n i); (= found 0); (= 0 found); 
+Pos is: (<= n i); (= found 0); (= 0 found); 
+workList is :[B4] [B7] [B14] [B13] [B12] [B11] [B6] 
+-----------process [B4]-------------
+merge_result is: [(not (= found 0))] [(= i pos)] [(= pos i)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] 
+pre is
+[(not (= found 0))] [(= i pos)] [(= pos i)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] 
+------------------------------------
+stmt is: (= x__prime 0)
+Pre is: (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); (= x 0); (= 0 x); (phi x 0 1); 
+workList is :[B3] [B7] [B14] [B13] [B12] [B11] [B6] 
+-----------process [B3]-------------
+[(not (= found 0))] [(phi x 0 1)]  ---merge--- [(not (= found 0))] [(= i pos)] [(= pos i)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(= x 0)] [(= 0 x)] [(phi x 0 1)] 
+merge_result is: [(not (= found 0))] [(phi x 0 1)] 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+------------------------------------
+stmt is: (< x pos)
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (> pos x); 
+(not (< x pos)); 
+------------------------------------
+stmt is: (not (< x pos))
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (<= pos x); 
+workList is :[B7] [B14] [B13] [B12] [B11] [B6] 
+-----------process [B7]-------------
+merge_result is: [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(> (+ (- 1) n) i)] [(> (+ (- 1) n) pos)] 
+pre is
+[(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(> (+ (- 1) n) i)] [(> (+ (- 1) n) pos)] 
+------------------------------------
+stmt is: (= (select vectorx__prime i) (select vectorx (+ i 1)))
+Pre is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (> (+ (- 1) n) i); (> (+ (- 1) n) pos); 
+Pos is: 
+workList is :[B14] [B13] [B12] [B11] [B6] 
+-----------process [B14]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] 
+(< i n); (= found 0); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+false; 
+workList is :[B13] [B12] [B11] [B6] 
+-----------process [B13]-------------
+-----------process [B13]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] 
+(= (select vectorx i) element); 
+------------------------------------
+stmt is: (= (select vectorx i) element)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); (= (select vectorx i) element); (= element (select vectorx i)); 
+(not (= (select vectorx i) element)); 
+------------------------------------
+stmt is: (not (= (select vectorx i) element))
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); (not (= (select vectorx i) element)); 
+workList is :[B11] [B12] [B6] 
+-----------process [B11]-------------
+universalSet merge [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] [(not (= (select vectorx i) element))] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] [(not (= (select vectorx i) element))] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] [(> n i)] [(> 100000 i)] [(> n 0)] [(> n found)] [(> 100000 found)] [(not (= (select vectorx i) element))] 
+------------------------------------
+stmt is: (= i__prime (+ i 1))
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (= i 0); (= i found); (= found i); (= 0 i); (phi i 0 1); (> n i); (> 100000 i); (> n 0); (> n found); (> 100000 found); (not (= (select vectorx i) element)); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+workList is :[B15] [B12] [B6] 
+-----------process [B15]-------------
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> n found)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+(< i n); 
+(not (< i n)); 
+(< i n); 
+false; 
+(< i n); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+(not (< i n)); 
+------------------------------------
+stmt is: (not (< i n))
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (<= n i); (<= 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> i 0); (> i found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+workList is :[B10] [B14] [B12] [B6] 
+-----------process [B10]-------------
+universalSet merge [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> n found)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(<= n i)] [(<= 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> i 0)] [(> i found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> n found)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(<= n i)] [(<= 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> i 0)] [(> i found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+(not (= found 0)); 
+(= found 0); 
+false; 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: 
+Pos is: (not (= found 0)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (<= n i); (<= 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> i 0); (> i found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (<= n i); (<= 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> i 0); (> i found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+workList is :[B5] [B9] [B14] [B12] [B6] 
+-----------process [B5]-------------
+[(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> n found)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(<= n i)] [(<= 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> i 0)] [(> i found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+merge_result is: [true] [(<= n (+ 1 i))] 
+(not (= found 0)); 
+false; 
+false; 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (<= n i); (<= 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> i 0); (> i found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> n found); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (<= n i); (<= 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> i 0); (> i found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+workList is :[B1] [B9] [B14] [B12] [B6] 
+-----------process [B1]-------------
+[(not (= found 0))] [(phi x 0 1)] [(<= pos x)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> n found)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(<= n i)] [(<= 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> i 0)] [(> i found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+merge_result is: [true] 
+pre is
+[true] 
+------------------------------------
+stmt is: (= _ret 0)
+Pre is: true; 
+Pos is: (= _ret 0); (= 0 _ret); 
+workList is :[B9] [B14] [B12] [B6] 
+-----------process [B9]-------------
+merge_result is: [(not (= found 0))] 
+pre is
+[(not (= found 0))] 
+------------------------------------
+stmt is: (= i__prime pos)
+Pre is: (not (= found 0)); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+workList is :[B14] [B12] [B6] 
+-----------process [B14]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+(< i n); (= found 0); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+false; 
+workList is :[B13] [B12] [B6] 
+-----------process [B13]-------------
+-----------process [B13]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+(= (select vectorx i) element); 
+------------------------------------
+stmt is: (= (select vectorx i) element)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (= (select vectorx i) element); (= element (select vectorx i)); 
+(not (= (select vectorx i) element)); 
+------------------------------------
+stmt is: (not (= (select vectorx i) element))
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (not (= (select vectorx i) element)); 
+workList is :[B11] [B12] [B6] 
+-----------process [B11]-------------
+universalSet merge [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(not (= (select vectorx i) element))] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(not (= (select vectorx i) element))] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(not (= (select vectorx i) element))] 
+------------------------------------
+stmt is: (= i__prime (+ i 1))
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (not (= (select vectorx i) element)); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (> n found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+workList is :[B15] [B12] [B6] 
+-----------process [B15]-------------
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [(> n found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] 
+(< i n); 
+(not (< i n)); 
+(< i n); 
+false; 
+(< i n); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+(not (< i n)); 
+------------------------------------
+stmt is: (not (< i n))
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (> n found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+Pos is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (> n found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (<= n i); (<= 100000 i); (> i 0); (> i found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 100000) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 n) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 found) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= i _i0) (< _i0 0) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); 
+workList is :[B12] [B6] 
+-----------process [B12]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(= (select vectorx i) element)] [(= element (select vectorx i))] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(= (select vectorx i) element)] [(= element (select vectorx i))] 
+------------------------------------
+stmt is: (= found__prime 1)
+Pre is: (= n 100000); (= 100000 n); (= found 0); (= 0 found); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> n found); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (= (select vectorx i) element); (= element (select vectorx i)); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (= (select vectorx i) element); (= element (select vectorx i)); (= found 1); (= 1 found); 
+------------------------------------
+stmt is: (= pos__prime i)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (= (select vectorx i) element); (= element (select vectorx i)); (= found 1); (= 1 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (= (select vectorx i) element); (= element (select vectorx i)); (= found 1); (= 1 found); (= pos i); (> n pos); (> 100000 pos); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (= i pos); 
+workList is :[B11] [B6] 
+-----------process [B11]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(= (select vectorx i) element)] [(= element (select vectorx i))] [(= found 1)] [(= 1 found)] [(= pos i)] [(> n pos)] [(> 100000 pos)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(= i pos)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> n found)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= found _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(not (= (select vectorx i) element))] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [true] [(> 100000 found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [true] [(> 100000 found)] 
+------------------------------------
+stmt is: (= i__prime (+ i 1))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); (> n i); (> 100000 i); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element))))); true; (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); 
+workList is :[B15] [B6] 
+-----------process [B15]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true)))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true)))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true)))
+]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true)))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true)))
+] 
+(< i n); 
+(not (< i n)); 
+(< i n); 
+false; 
+(< i n); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); 
+(not (< i n)); 
+------------------------------------
+stmt is: (not (< i n))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); (forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 true))); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); 
+workList is :[B10] [B14] [B6] 
+-----------process [B10]-------------
+universalSet merge [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] 
+(not (= found 0)); 
+(= found 0); 
+(not (= found 0)); 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (not (= found 0)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (= found 0); (= 0 found); 
+workList is :[B5] [B9] [B14] [B6] 
+-----------process [B5]-------------
+[(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(= found 0)] [(= 0 found)] 
+merge_result is: [true] [(<= n (+ 1 i))] 
+(not (= found 0)); 
+false; 
+false; 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+Pos is: (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (= found 0); (= 0 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (= found 0); (= 0 found); 
+workList is :[B1] [B9] [B14] [B6] 
+-----------process [B1]-------------
+[(not (= found 0))] [(phi x 0 1)] [(<= pos x)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(= found 0)] [(= 0 found)] 
+merge_result is: [true] 
+pre is
+[true] 
+------------------------------------
+stmt is: (= _ret 0)
+Pre is: true; 
+Pos is: (= _ret 0); (= 0 _ret); 
+workList is :[B9] [B14] [B6] 
+-----------process [B9]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(not (= found 0))] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(not (= found 0))] 
+------------------------------------
+stmt is: (= i__prime pos)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (not (= found 0)); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+workList is :[B8] [B14] [B6] 
+-----------process [B8]-------------
+universalSet merge [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] 
+(< i (- n 1)); 
+(not (< i (- n 1))); 
+(< i (- n 1)); 
+(not (< i (- n 1))); 
+(< i (- n 1)); 
+------------------------------------
+stmt is: (< i (- n 1))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (> (+ (- 1) n) i); (> (+ (- 1) n) pos); 
+(not (< i (- n 1))); 
+------------------------------------
+stmt is: (not (< i (- n 1)))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+workList is :[B5] [B7] [B14] [B6] 
+-----------process [B5]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(= found 0)] [(= 0 found)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [true] [(<= n (+ 1 i))] 
+(not (= found 0)); 
+false; 
+false; 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (<= n (+ 1 i)); (<= n (+ 1 pos)); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); (<= 99999 i); (<= 99999 pos); (> (+ 1 i) 0); (> (+ 1 pos) 0); (> (+ 1 i) found); (> (+ 1 pos) found); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (= found 0); (= 0 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (= found 0); (= 0 found); 
+workList is :[B4] [B7] [B14] [B6] 
+-----------process [B4]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(<= 99999 i)] [(<= 99999 pos)] [(> (+ 1 i) 0)] [(> (+ 1 pos) 0)] [(> (+ 1 i) found)] [(> (+ 1 pos) found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(<= 99999 i)] [(<= 99999 pos)] [(> (+ 1 i) 0)] [(> (+ 1 pos) 0)] [(> (+ 1 i) found)] [(> (+ 1 pos) found)] 
+------------------------------------
+stmt is: (= x__prime 0)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); (<= 99999 i); (<= 99999 pos); (> (+ 1 i) 0); (> (+ 1 pos) 0); (> (+ 1 i) found); (> (+ 1 pos) found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (<= n (+ 1 i)); (<= n (+ 1 pos)); (<= 99999 i); (<= 99999 pos); (> (+ 1 i) 0); (> (+ 1 pos) 0); (> (+ 1 i) found); (> (+ 1 pos) found); (= x 0); (> n x); (> (+ 1 i) x); (> (+ 1 pos) x); (= 0 x); (> 100000 x); (phi x 0 1); 
+workList is :[B3] [B7] [B14] [B6] 
+-----------process [B3]-------------
+[(not (= found 0))] [(phi x 0 1)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(<= 99999 i)] [(<= 99999 pos)] [(> (+ 1 i) 0)] [(> (+ 1 pos) 0)] [(> (+ 1 i) found)] [(> (+ 1 pos) found)] [(= x 0)] [(> n x)] [(> (+ 1 i) x)] [(> (+ 1 pos) x)] [(= 0 x)] [(> 100000 x)] [(phi x 0 1)] 
+merge_result is: [true] [(not (= found 0))] [(phi x 0 1)] 
+(< x pos); 
+(not (< x pos)); 
+(< x pos); 
+false; 
+(< x pos); 
+------------------------------------
+stmt is: (< x pos)
+Pre is: true; (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (> pos x); 
+(not (< x pos)); 
+------------------------------------
+stmt is: (not (< x pos))
+Pre is: (not (= found 0)); (phi x 0 1); 
+Pos is: (not (= found 0)); (phi x 0 1); (<= pos x); 
+workList is :[B7] [B14] [B6] 
+-----------process [B7]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(> (+ (- 1) n) i)] [(> (+ (- 1) n) pos)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(= pos i)] [(phi i pos 1)] [(> (+ (- 1) n) i)] [(> (+ (- 1) n) pos)] 
+------------------------------------
+stmt is: (= (select vectorx__prime i) (select vectorx (+ i 1)))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); (> (+ (- 1) n) i); (> (+ (- 1) n) pos); 
+Pos is: 
+workList is :[B14] [B6] 
+-----------process [B14]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] 
+(< i n); (= found 0); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (= found 0); (= 0 found); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (not (= found 0)); 
+workList is :[B10] [B13] [B6] 
+-----------process [B10]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(not (= found 0))]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [true] [(> n found)] 
+(not (= found 0)); 
+false; 
+(not (= found 0)); 
+(= found 0); 
+(not (= found 0)); 
+------------------------------------
+stmt is: (not (= found 0))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); true; (> n found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); 
+(= found 0); 
+------------------------------------
+stmt is: (= found 0)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); (= found 0); (= 0 found); 
+workList is :[B9] [B13] [B6] 
+-----------process [B9]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] 
+------------------------------------
+stmt is: (= i__prime pos)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (not (= found 0)); (= i pos); (= pos i); (phi i pos 1); 
+workList is :[B13] [B6] 
+-----------process [B13]-------------
+-----------process [B13]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= 0 found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= 0 found)] 
+(= (select vectorx i) element); 
+------------------------------------
+stmt is: (= (select vectorx i) element)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (= found 0); (= 0 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (= found 0); (= 0 found); (= (select vectorx i) element); (= element (select vectorx i)); 
+(not (= (select vectorx i) element)); 
+------------------------------------
+stmt is: (not (= (select vectorx i) element))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (= found 0); (= 0 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (= found 0); (= 0 found); (not (= (select vectorx i) element)); 
+workList is :[B11] [B12] [B6] 
+-----------process [B11]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(> n i)] [(> 100000 i)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 i) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(= (select vectorx i) element)] [(= element (select vectorx i))] [(= found 1)] [(= 1 found)] [(= pos i)] [(> n pos)] [(> 100000 pos)] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 0 _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= n _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [
+(forall ((_i0 Int))
+  (let ((a!1 (and (<= 100000 _i0) (< _i0 pos) (= (mod (- _i0 0) 1) 0))))
+    (=> a!1 (not (= (select vectorx _i0) element)))))
+] [(= i pos)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= 0 found)] [(not (= (select vectorx i) element))] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> n i)] [(> 100000 i)] [true] [(> 100000 found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> n i)] [(> 100000 i)] [true] [(> 100000 found)] 
+------------------------------------
+stmt is: (= i__prime (+ i 1))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> n i); (> 100000 i); true; (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); 
+workList is :[B15] [B12] [B6] 
+-----------process [B15]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n found)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(= found 0)] [(= 0 found)] [(= i 0)] [(= i found)] [(= found i)] [(= 0 i)] [(phi i 0 1)] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] 
+(< i n); 
+(not (< i n)); 
+(< i n); 
+false; 
+(< i n); 
+------------------------------------
+stmt is: (< i n)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); 
+(not (< i n)); 
+------------------------------------
+stmt is: (not (< i n))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); (<= n i); (<= 100000 i); (> i 0); (> i found); 
+workList is :[B12] [B6] 
+-----------process [B12]-------------
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= 0 found)] [(= (select vectorx i) element)] [(= element (select vectorx i))] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= 0 found)] [(= (select vectorx i) element)] [(= element (select vectorx i))] 
+------------------------------------
+stmt is: (= found__prime 1)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n i); (> n found); (> 100000 i); (= found 0); (= 0 found); (= (select vectorx i) element); (= element (select vectorx i)); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> n i); (> 100000 i); (= (select vectorx i) element); (= element (select vectorx i)); (= found 1); (= 1 found); 
+------------------------------------
+stmt is: (= pos__prime i)
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> n i); (> 100000 i); (= (select vectorx i) element); (= element (select vectorx i)); (= found 1); (= 1 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> n i); (> 100000 i); (= (select vectorx i) element); (= element (select vectorx i)); (= found 1); (= 1 found); (= pos i); (> n pos); (> 100000 pos); (= i pos); 
+workList is :[B11] [B6] 
+-----------process [B11]-------------
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> n i)] [(> 100000 i)] [(= (select vectorx i) element)] [(= element (select vectorx i))] [(= found 1)] [(= 1 found)] [(= pos i)] [(> n pos)] [(> 100000 pos)] [(= i pos)]  ---merge--- [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= 0 found)] [(not (= (select vectorx i) element))] 
+merge_result is: [(= n 100000)] [(= 100000 n)] [(> n 0)] [(> n i)] [(> 100000 i)] [true] [(> 100000 found)] 
+pre is
+[(= n 100000)] [(= 100000 n)] [(> n 0)] [(> n i)] [(> 100000 i)] [true] [(> 100000 found)] 
+------------------------------------
+stmt is: (= i__prime (+ i 1))
+Pre is: (= n 100000); (= 100000 n); (> n 0); (> n i); (> 100000 i); true; (> 100000 found); 
+Pos is: (= n 100000); (= 100000 n); (> n 0); (> 100000 found); (> n found); 
+workList is :[B6] 
+-----------process [B6]-------------
+merge_result is: 
+pre is
+
+------------------------------------
+stmt is: (= i__prime (+ i 1))
+Pre is: 
+Pos is: 
+*******************process function end::  main***************
+--------------------result--------------------
+[B0] in :[(= _ret 0)] 
+[B1] in :
+[B1]-> [B0] out :[(= _ret 0)] 
+[B2] in :[(not (= found 0))] [(phi x 0 1)] [(> pos x)] 
+[B2]-> [B3] out :[(not (= found 0))] [(phi x 0 1)] 
+[B3] in :[(not (= found 0))] [(phi x 0 1)] 
+[B3]-> [B2] out :[(not (= found 0))] [(phi x 0 1)] [(> pos x)] 
+[B3]-> [B1] out :[(not (= found 0))] [(phi x 0 1)] [(<= pos x)] 
+[B4] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(<= 99999 i)] [(<= 99999 pos)] [(> (+ 1 i) 0)] [(> (+ 1 pos) 0)] [(> (+ 1 i) found)] [(> (+ 1 pos) found)] 
+[B4]-> [B3] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(<= 99999 i)] [(<= 99999 pos)] [(> (+ 1 i) 0)] [(> (+ 1 pos) 0)] [(> (+ 1 i) found)] [(> (+ 1 pos) found)] [(= x 0)] [(> n x)] [(> (+ 1 i) x)] [(> (+ 1 pos) x)] [(> 100000 x)] [(phi x 0 1)] 
+[B5] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n (+ 1 i))] 
+[B5]-> [B4] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] [(<= 99999 i)] [(<= 99999 pos)] [(> (+ 1 i) 0)] [(> (+ 1 pos) 0)] [(> (+ 1 i) found)] [(> (+ 1 pos) found)] 
+[B5]-> [B1] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(= found 0)] 
+[B6] in :
+[B6]-> [B8] out :
+[B7] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(phi i pos 1)] [(> (+ (- 1) n) i)] [(> (+ (- 1) n) pos)] 
+[B7]-> [B6] out :
+[B8] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(phi i pos 1)] 
+[B8]-> [B7] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(phi i pos 1)] [(> (+ (- 1) n) i)] [(> (+ (- 1) n) pos)] 
+[B8]-> [B5] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(phi i pos 1)] [(<= n (+ 1 i))] [(<= n (+ 1 pos))] 
+[B9] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] 
+[B9]-> [B8] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] [(= i pos)] [(phi i pos 1)] 
+[B10] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] 
+[B10]-> [B9] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(not (= found 0))] 
+[B10]-> [B5] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] [(= found 0)] 
+[B11] in :[(= n 100000)] [(> n 0)] [(> n i)] [(> 100000 i)] [(> 100000 found)] 
+[B11]-> [B15] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] 
+[B12] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= (select vectorx i) element)] 
+[B12]-> [B11] out :[(= n 100000)] [(> n 0)] [(> n i)] [(> 100000 i)] [(= (select vectorx i) element)] [(= found 1)] [(= pos i)] [(> n pos)] [(> 100000 pos)] 
+[B13] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] 
+[B13]-> [B12] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(= (select vectorx i) element)] 
+[B13]-> [B11] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] [(not (= (select vectorx i) element))] 
+[B14] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] 
+[B14]-> [B13] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(= found 0)] 
+[B14]-> [B10] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] [(not (= found 0))] 
+[B15] in :[(= n 100000)] [(> n 0)] [(> 100000 found)] 
+[B15]-> [B14] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n i)] [(> n found)] [(> 100000 i)] 
+[B15]-> [B10] out :[(= n 100000)] [(> n 0)] [(> 100000 found)] [(> n found)] [(<= n i)] [(<= 100000 i)] [(> i 0)] [(> i found)] 
+[B16] in :
+[B16]-> [B15] out :[(= n 100000)] [(= found 0)] [(= i 0)] [(= i found)] [(phi i 0 1)] 
+[B17] in :
+[B17]-> [B16] out :
+time: 11.141898 s
+time: 11 s

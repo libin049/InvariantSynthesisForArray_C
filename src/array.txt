@@ -1,0 +1,61 @@
+*******************process function::  arrayCopy***************
+meet time: 0.045158 s
+time: 0.467735 s
+*******************process function::  arrayIf***************
+meet time: 0.154399 s
+time: 0.579356 s
+*******************process function::  towDarrayCopy***************
+meet time: 1.857383 s
+time: 6.108035 s
+*******************process function::  towDarrayIf***************
+meet time: 6.354525 s
+time: 11.502454 s
+*******************process function::  towDarrayIf2***************
+meet time: 1.017353 s
+time: 4.002030 s
+*******************process function::  arrayMax***************
+meet time: 0.331609 s
+time: 1.193995 s
+*******************process function::  arrayInit***************
+meet time: 0.047850 s
+time: 0.584719 s
+*******************process function::  arrayInit2***************
+meet time: 0.025677 s
+time: 0.479116 s
+*******************process function::  arrayInit3***************
+meet time: 0.089082 s
+time: 0.813522 s
+*******************process function::  arraySentinel***************
+meet time: 0.021411 s
+time: 0.359924 s
+*******************process function::  arraySentinel2***************
+meet time: 0.026065 s
+time: 0.532099 s
+*******************process function::  arrayPartition***************
+meet time: 1.666275 s
+time: 4.265952 s
+*******************process function::  towArrayInit***************
+meet time: 3.095588 s
+time: 15.841767 s
+*******************process function::  firstNotNull***************
+meet time: 0.957626 s
+time: 2.461272 s
+*******************process function::  firstNotNull2***************
+meet time: 0.025514 s
+time: 0.702597 s
+*******************process function::  threeDarrayCopy***************
+meet time: 82.958529 s
+time: 144.276321 s
+*******************process function::  threeDarrayCheck***************
+meet time: 138.033119 s
+time: 168.264162 s
+*******************process function::  find***************
+meet time: 0.363796 s
+time: 3.037488 s
+*******************process function::  arrayInit4***************
+meet time: 0.051242 s
+time: 0.481957 s
+*******************process function::  threeDarrayCheck2***************
+meet time: 25.006162 s
+time: 57.307397 s
+423  179  402  234  

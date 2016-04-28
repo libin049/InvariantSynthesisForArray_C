@@ -1,0 +1,22 @@
+ 
+
+int strncmp(const char *cs, const char *ct,int count_init)
+{
+         unsigned char c1, c2;
+ 	 int count=count_init;
+	 int cs_index=0;
+	 int ct_index=0; 
+         while (count) {
+                c1 = cs[cs_index];
+		cs_index++;
+                c2 = ct[ct_index];
+		ct_index++;
+                 if (c1 != c2)
+                         if(c1 < c2) return -1 ;
+			 else return 1;
+                 if (!c1)
+                         break;
+                 count--;
+         }
+         return 0;
+}

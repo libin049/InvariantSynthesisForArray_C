@@ -1,0 +1,25 @@
+#! /usr/bin/expect
+set timeout 10
+spawn gdb ./arrayAnalysis
+send "set args ../testcase/test.cpp --\r"
+#send "b DataFlowAnalysis_FeasiblePath.h:79\r"
+#send "b DataFlowAnalysis_FeasiblePath.h:81\r"
+#send "b DataFlowAnalysis.h:79\r"
+#send "b MemoryUtilOnExpr.h:68\r"
+#send "b MemoryUtil.h:1452\r"
+#send "b MemoryUtil.h:1472\r"
+#send "b MemoryUtil.h:1491\r"
+#send "b MemoryUtil.h:1510\r"
+#send "b main.cpp:80\r"
+#send "b AtomVariableDiffAnalysisOnExpr.h:234\r"
+#send "b main.cpp:130\r"
+#send "b CFGZ3Code.h:75\r"
+#send "b AtomVariableAnalysisOnExpr.h:282\r"
+send "b NormalizationAnalysis.h:56\r"
+#send "b AtomVariableInitToUpdateAnalysisOnExpr.h:201\r"
+#send "b ArrayInvAnalysis_FeasiblePathOnExpr.h:128\r"
+send "r\r"
+interact
+
+
+

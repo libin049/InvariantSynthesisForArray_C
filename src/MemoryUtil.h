@@ -4,6 +4,7 @@
 #include "Z3Coding.h"
 #include "Formula.h"
 #include "AtomVariableAnalysis.h"
+#include "AtomVariableDiffAnalysis.h"
 /***
  * forany formula  that statement stmt generates, it is a simple formula
  * befor stmt, a set of formulas Pre holds
@@ -35,7 +36,7 @@ class MemoryUtil{
 		//vector<expr> initStmts;
 		//vector<expr> updateStmts;
 		AtomVariablaAnalysis* ava;
-
+		AtomVariablaDiffAnalysis* avdiff;
 		/**
 		 * @brief 
 		 * @param Pre
@@ -46,6 +47,7 @@ class MemoryUtil{
 		 */
 		vector<expr> * closureIndexUpdate(const clang::Stmt * clangStmt,vector<expr> * Pre,vector<expr> * primedformulas, expr stmt, bool* isKillPhi){
 			vector<expr> * closureformulas=new vector<expr>();
+			
 			vector<expr> * formulas=new vector<expr>();
 			pushAToB(Pre,formulas);
 			pushAToB(primedformulas,formulas);
@@ -83,11 +85,20 @@ class MemoryUtil{
 					closureformulas->push_back(primedforallFormula);
 				}
 			}
+			
+			//add index=>init or index<=init
+			/*expr primedindex=stmt.arg(0);
+			expr primedinit=primedLift(getInitFromIndex(clangStmt,z3Coding.unprime(primedindex)));
+			expr primedstep=primedLift(getStepFromIndex(clangStmt,z3Coding.unprime(primedindex)));
+			if(z3Coding.prove(Pre,primedstep>0)==proved_result::proved) closureformulas->push_back(primedindex>=primedinit);
+			if(z3Coding.prove(Pre,primedstep<0)==proved_result::proved) closureformulas->push_back(primedindex<=primedinit);*/
 			//synthesis forall formula from some forall formula
 			//synthesis forall formula from some forall formula
-
+			
 			stop=time(NULL);
-//			std::cout<<"clourse3 Time:"<<stop-start<<std::endl;
+			//std::cout<<"clourse3 Time:"<<stop-start<<std::endl;
+			
+			
 			
 			return closureformulas;
 		}
@@ -108,11 +119,17 @@ class MemoryUtil{
 			expr primedphi=constructPhiFormula(primedindex,primedinit,step);
 			
 			closureformulas->push_back(primedphi);
+			
+			//if(z3Coding.prove(Pre,step>0)==proved_result::proved) closureformulas->push_back(primedindex>=primedinit);
+			//if(z3Coding.prove(Pre,step<0)==proved_result::proved) closureformulas->push_back(primedindex<=primedinit);
 			return closureformulas;
 		}
-		vector<expr> * closureAssigndToArrayAcess(vector<expr> * Pre,vector<expr> * primedformulas, expr stmt){
+		vector<expr> * closureAssigndToArrayAcess(const clang::Stmt* clangStmt,vector<expr> * Pre,vector<expr> * primedformulas, expr stmt){
 			vector<expr> * closureformulas=new vector<expr>();
 			expr left=stmt.arg(0);
+			#ifdef _CHECK_ARRAY_SIZE_VALID
+			if(!isArrayAcessExpLtArrayLength(clangStmt,Pre,left)) return closureformulas;
+			#endif
 			vector<expr> * formulas=new vector<expr>();
 			pushAToB(Pre,formulas);
 			pushAToB(primedformulas,formulas);
@@ -171,6 +188,7 @@ class MemoryUtil{
 				
 				bool isIndexStepGtZeroFlag=isIndexStepGtZero(closureformulas,stmt);
 				bool isIndexStepLtZeroFlag=isIndexStepLtZero(closureformulas,stmt);
+				//std::cout<<"6666666666666isIndexStepLtZeroFlag end: "<<std::endl;
 				for(expr phi: *allPhiFormula){
 					expr phiIndex=getPhiIndex(phi);
 					//std::cout<<"phiIndex is: "<<phiIndex<<std::endl;
@@ -185,7 +203,7 @@ class MemoryUtil{
 						//std::cout<<"phiIndexRelatedArrayAcessFormula is: "<<toString(phiIndexRelatedArrayAcessFormula)<<std::endl;
 						for(expr body : *phiIndexRelatedArrayAcessFormula){
 							//generate forall formula
-
+							//	std::cout<<"5555555555"<<body<<std::endl;
 							vector<expr> * cons=z3Coding.getConstsWithQuantifier(body);
 							vector<expr> * initcons=z3Coding.getConstsWithQuantifier(init);
 							pushAToB(initcons,cons);
@@ -219,6 +237,7 @@ class MemoryUtil{
 					}
 				}
 			}
+			//std::cout<<"44444444444444444"<<std::endl;
 			return closureformulas;
 		}
 		
@@ -249,62 +268,9 @@ class MemoryUtil{
 		}
 	
 
-		MemoryUtil(Z3Coding &coding,context &ctx,AtomVariablaAnalysis* ava):z3Coding(coding),c(ctx){
+		MemoryUtil(Z3Coding &coding,context &ctx,AtomVariablaAnalysis* ava,AtomVariablaDiffAnalysis* avdiff):z3Coding(coding),c(ctx){
 			this->ava=ava;
-			
-//			expr i=c.int_const("i");
-//			expr j=c.int_const("j");
-//			expr k=c.int_const("k");
-//			#ifdef _NON_QUICKSORT
-//			initStmts.push_back(z3Coding.prime(i)==0);
-//			initStmts.push_back(z3Coding.prime(j)==0);
-//			#endif
-//			
-//			#ifdef _QUICKSORT
-//			expr size=c.int_const("size");
-//			initStmts.push_back(z3Coding.prime(i)==1);
-//			initStmts.push_back(z3Coding.prime(j)==size-1);
-//			#endif
-//			
-//			initStmts.push_back(z3Coding.prime(k)==0);
-//			
-//			#ifdef _NON_QUICKSORT
-//			updateStmts.push_back(z3Coding.prime(i)==i+1);
-//			updateStmts.push_back(z3Coding.prime(j)==j+1);
-//			#endif
-//			
-//			#ifdef _QUICKSORT
-//			updateStmts.push_back(z3Coding.prime(i)==i+1);
-//			updateStmts.push_back(z3Coding.prime(j)==j-1);
-//			#endif
-//			
-//			updateStmts.push_back(z3Coding.prime(k)==k+1);
-//			expr zero=c.int_val(0);
-//			expr one=c.int_val(1);
-//			
-//			#ifdef _NON_QUICKSORT
-//			indexNameToInit.insert(std::pair<std::string,expr>("i",zero));
-//			indexNameToInit.insert(std::pair<std::string,expr>("j",zero));
-//			#endif
-//			
-//			#ifdef _QUICKSORT
-//			indexNameToInit.insert(std::pair<std::string,expr>("i",one));
-//			indexNameToInit.insert(std::pair<std::string,expr>("j",size-1));
-//			#endif
-//			
-//			indexNameToInit.insert(std::pair<std::string,expr>("k",zero));
-//			
-//			#ifdef _NON_QUICKSORT
-//			indexNameToStep.insert(std::pair<std::string,expr>("i",one));
-//			indexNameToStep.insert(std::pair<std::string,expr>("j",one));
-//			#endif
-//			
-//			#ifdef _QUICKSORT
-//			indexNameToStep.insert(std::pair<std::string,expr>("i",one));
-//			indexNameToStep.insert(std::pair<std::string,expr>("j",-one));
-//			#endif
-//			
-//			indexNameToStep.insert(std::pair<std::string,expr>("k",one));
+			this->avdiff=avdiff;
 		}
 
 //		bool isIndexUpdate(expr stmt){
@@ -344,9 +310,9 @@ class MemoryUtil{
 			expr right=indexUpdateStmt.arg(1);
 			expr index=z3Coding.unprime(primedIndex);
 			expr assert=index<right;
-			//			std::cout<<"assert is :"<<assert<<std::endl;
-			//			std::cout<<"Pre is  :"<<toString(Pre)<<std::endl;
-			if(z3Coding.prove(Pre,assert)==proved_result::proved){
+			//std::cout<<"assert is :"<<assert<<std::endl;
+			//std::cout<<"Pre is  :"<<toString(Pre)<<std::endl;
+			if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 				return true;
 			}
 			return false;
@@ -356,7 +322,9 @@ class MemoryUtil{
 			expr right=indexUpdateStmt.arg(1);
 			expr index=z3Coding.unprime(primedIndex);
 			expr assert=index>right;
-			if(z3Coding.prove(Pre,assert)==proved_result::proved){
+			//std::cout<<"assert is :"<<assert<<std::endl;
+			//std::cout<<"Pre is  :"<<toString(Pre)<<std::endl;
+			if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 				return true;
 			}
 			return false;
@@ -479,6 +447,7 @@ class MemoryUtil{
 		 * @return unprimed(pos-state of stmt) 
 		 */
 		vector<expr> * Pos(const clang::Stmt* clangStmt,vector<expr> * Pre, expr stmt, map<std::string,expr> * scopeMemoryUnits){
+			Pre=z3Coding.eliminateNotFormula(Pre);
 			//std::cout<<"stmt is: "<<stmt<<std::endl;
 			//std::cout<<"MemoryUnits is: "<<toString(scopeMemoryUnits)<<std::endl;
 			vector<expr> * primedformulas=generatePrimed(Pre,stmt,scopeMemoryUnits);
@@ -538,12 +507,12 @@ class MemoryUtil{
 			if(isIn(index,initCons)&&!isIn(index,endCons)){
 				expr newinit=z3Coding.substitute(init,index,right);
 				expr assert=newinit>init;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become smaller, forallFormula is still valid
 					return true;
 				}
 				assert=newinit<init;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become bigger
 					expr beginFormula=z3Coding.getQuantifierBeginFormula(forallFormula);
 					expr newForAllBody(c);
@@ -563,12 +532,12 @@ class MemoryUtil{
 			if(!isIn(index,initCons)&&isIn(index,endCons)){
 				expr newend=z3Coding.substitute(end,index,right);
 				expr assert=newend<end;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become smaller, forallFormula is still valid
 					return true;
 				}
 				assert=newend>end;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become bigger
 					expr endFormula=z3Coding.getQuantifierEndFormula(forallFormula);
 					expr newForAllBody(c);
@@ -638,12 +607,12 @@ class MemoryUtil{
 			if(isIn(index,initCons)&&!isIn(index,endCons)){
 				expr newinit=z3Coding.substitute(init,index,right);
 				expr assert=newinit>init;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become smaller, forallFormula is still valid
 					return forallFormula;
 				}
 				assert=newinit<init;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become bigger
 					
 					expr newForAllBody(c);
@@ -676,12 +645,12 @@ class MemoryUtil{
 			if(!isIn(index,initCons)&&isIn(index,endCons)){
 				expr newend=z3Coding.substitute(end,index,right);
 				expr assert=newend<end;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become smaller, forallFormula is still valid
 					return forallFormula;
 				}
 				assert=newend>end;
-				if(z3Coding.prove(Pre,assert)==proved_result::proved){
+				if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert)==proved_result::proved){
 					//interval become bigger
 					
 					expr newForAllBody(c);
@@ -733,6 +702,112 @@ class MemoryUtil{
 			return nullptr;
 		}
 		/**
+		 * @brief e1[e2],check e2 < e1.length
+		 * @param Pre
+		 * @param arrayAcess e1[e2]
+		 * @return check e2 < e1.length
+		 */
+		bool isArrayAcessExpLtArrayLength(vector<expr> * Pre,expr arrayAcess){
+			arrayAcess=unprimedDecline(arrayAcess);
+			if(z3Coding.isArrayAcess(arrayAcess)){
+				expr base=z3Coding.getArrayBase(arrayAcess);
+				std::string arrayName=Z3_ast_to_string(c,base);
+				if(z3Coding.arrayVariable2arrayLength.count(arrayName)>0){
+					vector<expr> * arrayLengths=z3Coding.arrayVariable2arrayLength.at(arrayName);
+					unsigned d=z3Coding.getArrayAcessDimension(arrayAcess);
+					if(d>arrayLengths->size()) return false;
+					for(unsigned i=0;i<d;i++){
+						expr idxk=z3Coding.getArrayAcessKthIdx(arrayAcess,i);
+						expr idxAssert=(/*idxk>=0&&*/idxk<arrayLengths->at(i));
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),idxAssert);
+						if(r==proved_result::proved){
+							return true;	
+						}
+						else {
+							return false;
+						}
+					}
+				}
+				else{
+					return false;
+				}
+			}
+			return false;
+		}
+		
+		vector<expr>* getIndexAndInitProperty(vector<expr>* Pre,const clang::Stmt* clangStmt){
+			if(ava->mapToStmtOut.count(clangStmt)<=0){
+				return new vector<expr>();
+			}
+			vector<expr>* result=new vector<expr>();
+			FlowSet* out=ava->mapToStmtOut.at(clangStmt);
+			ValueListSet* vlsOut=(ValueListSet*)out;
+			for(Property* p: vlsOut->elements){
+				AtomVariabla * av=(AtomVariabla *)p;
+				if(av->hasStep()){
+					expr step=av->stepz3coding;
+					if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),step>0)==proved_result::proved){
+						result->push_back(av->scalaVarz3coding >= av->initz3coding);
+					}
+					else if(z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),step<0)==proved_result::proved){
+						result->push_back(av->scalaVarz3coding <= av->initz3coding);
+					}
+				}
+			}
+			return result;
+		}
+		bool isArrayAcessExpLtArrayLength(const clang::Stmt* clangStmt,vector<expr> * Pre,expr arrayAcess){
+			vector<expr>* extendPre=new  vector<expr>();
+			pushAToB(Pre,extendPre);
+			vector<expr>* tmp=getIndexAndInitProperty(Pre,clangStmt);
+			pushAToB(tmp,extendPre);
+			arrayAcess=unprimedDecline(arrayAcess);
+			if(z3Coding.isArrayAcess(arrayAcess)){
+				expr base=z3Coding.getArrayBase(arrayAcess);
+				std::string arrayName=Z3_ast_to_string(c,base);
+				if(z3Coding.arrayVariable2arrayLength.count(arrayName)>0){
+					vector<expr> * arrayLengths=z3Coding.arrayVariable2arrayLength.at(arrayName);
+					unsigned d=z3Coding.getArrayAcessDimension(arrayAcess);
+					if(d>arrayLengths->size()) return false;
+					for(unsigned i=0;i<d;i++){
+						expr idxk=z3Coding.getArrayAcessKthIdx(arrayAcess,i);
+						expr idxAssert=(idxk>=0&&idxk<arrayLengths->at(i));
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(extendPre),idxAssert);
+						if(r==proved_result::proved){
+							return true;	
+						}
+						else {
+							return false;
+						}
+					}
+				}
+				else{
+					return false;
+				}
+			}
+			return false;
+		}
+		
+		/*bool mayMemoryUnitIsInPatch(vector<expr> * Pre,expr memoryunit1,expr memoryunit2){
+			if(z3Coding.isArrayAcess(memoryunit1)){
+				if(isArrayAcessExpLtArrayLength(Pre,memoryunit1)){
+					return false;
+				}
+				else{
+					return true;
+				}
+			}
+			if(z3Coding.isArrayAcess(memoryunit2)){
+				if(isArrayAcessExpLtArrayLength(Pre,memoryunit2)){
+					return false;
+				}
+				else{
+					return true;
+				}
+			}
+			return false;
+		}*/
+		/**
 		 * @brief memoryunit1's memory may isin constsMemory set of memoryunit2 
 		 * @param Pre
 		 * @param memoryunit1
@@ -740,6 +815,9 @@ class MemoryUtil{
 		 * @return  
 		 */
 		bool mayMemoryUnitIsIn(vector<expr> * Pre,expr memoryunit1,expr memoryunit2){
+			
+			//if(mayMemoryUnitIsInPatch(Pre,memoryunit1,memoryunit2)) return true;
+			
 			if(memoryunit1.is_const()&&memoryunit2.is_const()){
 				return memoryunit1.decl().name().str()==memoryunit2.decl().name().str();
 			}
@@ -834,9 +912,21 @@ class MemoryUtil{
 			}
 			return true;
 		}
-
+		/*bool mayMemoryUnitIsInFormulaPatch(vector<expr> * Pre,expr memoryunit1){
+			if(z3Coding.isArrayAcess(memoryunit1)){
+				if(isArrayAcessExpLtArrayLength(Pre,memoryunit1)){
+					return false;
+				}
+				else{
+					return true;
+				}
+			}
+			return false;
+		}*/
 
 		bool mayMemoryUnitIsInFormula(vector<expr> * Pre,expr memoryunit1,expr formula){
+			
+			//if(mayMemoryUnitIsInFormulaPatch(Pre,memoryunit1)) return true;
 			if(memoryunit1.is_const()){
 				vector<expr>* consts=z3Coding.getConsts(formula);
 				for(auto it=consts->begin();it!=consts->end();it++){
@@ -1015,27 +1105,27 @@ class MemoryUtil{
 
 		compared_result compare(vector<expr>* Pre, expr e1, expr e2){
 			expr assert=e1<e2;
-			proved_result r=z3Coding.prove(Pre,assert);
+			proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 			if(r==proved_result::proved){
 				return compared_result::LT;
 			}
 			assert=e1>e2;
-			r=z3Coding.prove(Pre,assert);
+			r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 			if(r==proved_result::proved){
 				return compared_result::GT;
 			}
 			assert=e1==e2;
-			r=z3Coding.prove(Pre,assert);
+			r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 			if(r==proved_result::proved){
 				return compared_result::EQ;
 			}
 			assert=e1<=e2;
-			r=z3Coding.prove(Pre,assert);
+			r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 			if(r==proved_result::proved){
 				return compared_result::LE;
 			}
 			assert=e1>=e2;
-			r=z3Coding.prove(Pre,assert);
+			r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 			if(r==proved_result::proved){
 				return compared_result::GE;
 			}
@@ -1120,13 +1210,68 @@ class MemoryUtil{
 				expr new_e=e;
 				for(expr p: *primedformulas){
 					new_e=z3Coding.substitute(new_e,p.arg(1),primedLift(p.arg(0)));
-					new_e=z3Coding.substitute(new_e,p.arg(1).simplify(),primedLift(p.arg(0).simplify()));
+					//new_e=z3Coding.substitute(new_e,z3Coding.simplify(p.arg(1)),primedLift(z3Coding.simplify(p.arg(0))));
 				}
 				if(!z3Coding.hasUnPrimedVariable(new_e)){
 					ret->push_back(new_e);
 				}
 			}
 			return ret;
+		}
+		
+		vector<expr> * hasExprs(vector<expr> * formulas,expr e1,expr e2){
+			vector<expr> * result=filtering(formulas,e1);
+			result=filtering(result,e2);
+			return result;
+		}
+		
+		vector<expr> * closureMultiIndexRelationSubstitute(vector<expr>* formulas,expr from,expr to){
+			vector<expr>* result=new vector<expr>();
+			pushAToB(formulas,result);
+			for(expr e:*formulas){
+				if(!z3Coding.isForAllFormula(e)){
+					expr subexpr=z3Coding.substitute(e,from,to);
+					if(!z3Coding.isIn(subexpr,result)){
+						result->push_back(subexpr);
+					}
+				}
+			}
+			return result;
+		}
+		vector<expr> * closureMultiIndexRelation(const clang::Stmt* clangStmt,vector<expr> * formulas){
+			vector<expr> * result=new vector<expr>();
+			pushAToB(formulas,result);
+			if(avdiff->mapToStmtOut.count(clangStmt)>0){
+				FlowSet* out=avdiff->mapToStmtOut.at(clangStmt);
+				ValueListSet* vlsOut=(ValueListSet*)out;
+				for(Property* p: vlsOut->elements){
+					AtomVariablaDiff * avdiff=(AtomVariablaDiff *)p;
+					expr index1=avdiff->av1->scalaVarz3coding;
+					expr index2=avdiff->av2->scalaVarz3coding;
+					expr equation1=avdiff->generateEquation1();
+					expr equation2=avdiff->generateEquation2();
+					vector<expr>* tmp=hasExprs(formulas,primedLift(index1),primedLift(index2));
+					vector<expr>* newExprs=closureMultiIndexRelationSubstitute(tmp,primedLift(equation1.arg(0)),primedLift(equation1.arg(1)));
+					for(expr e:*newExprs){
+						if(!z3Coding.isIn(e,result)){
+							result->push_back(e);
+						}
+					}
+					newExprs=closureMultiIndexRelationSubstitute(tmp,primedLift(equation2.arg(0)),primedLift(equation2.arg(1)));
+					for(expr e:*newExprs){
+						if(!z3Coding.isIn(e,result)){
+							result->push_back(e);
+						}
+					}
+					if(!z3Coding.isIn(primedLift(equation1),result)){
+						result->push_back(primedLift(equation1));
+					}
+					if(!z3Coding.isIn(primedLift(equation2),result)){
+						result->push_back(primedLift(equation2));
+					}
+				}
+			}
+			return result; 
 		}
 		/**
 		 * @brief generate closure(primedformulas and Pre) 
@@ -1198,12 +1343,14 @@ class MemoryUtil{
 				}
 			}
 			else if(isAssigndToArrayAcess(stmt)){
-				closureformulas=closureAssigndToArrayAcess(Pre,primedformulas,stmt);
+				closureformulas=closureAssigndToArrayAcess(clangStmt,Pre,primedformulas,stmt);
 				//transfer phi
 				vector<expr> *allPhi=getAllPhiFormula(closureformulas);
 				vector<expr> *allPrimedPhi=primedLift(allPhi);
 				pushAToB(allPrimedPhi,closureformulas);
 			}
+			//process mitil index relations
+			closureformulas=closureMultiIndexRelation(clangStmt,closureformulas);
 			return closureformulas;
 		}
 
@@ -1230,7 +1377,7 @@ class MemoryUtil{
 		 * @return 
 		 */
 		vector<expr> * closure(vector<expr> * formulas){
-//			std::cout<<"----------------formulas-----------------------"<<std::endl;
+			//std::cout<<"----------------formulas-----------------------"<<std::endl;
 //			std::cout<<toString(formulas)<<std::endl;
 			vector<expr> * canonicalformulas=z3Coding.canonical(formulas);
 			vector<expr> * queue=new vector<expr>();
@@ -1244,11 +1391,11 @@ class MemoryUtil{
 			
 			while(!queue->empty()){
 				
-				/*std::cout<<queue->size()<<":"<<closureformulas->size()<<std::endl;
-				std::cout<<"----------------closureformulas-----------------------"<<std::endl;
-				std::cout<<toString(closureformulas)<<std::endl;
-				std::cout<<"----------------queue-----------------------"<<std::endl;
-				std::cout<<toString(queue)<<std::endl;*/
+				//std::cout<<queue->size()<<":"<<closureformulas->size()<<std::endl;
+				//std::cout<<"----------------closureformulas-----------------------"<<std::endl;
+				//std::cout<<toString(closureformulas)<<std::endl;
+				//std::cout<<"----------------queue-----------------------"<<std::endl;
+				//std::cout<<toString(queue)<<std::endl;*/
 				
 				expr formula=queue->front(); queue->erase (queue->begin()); dequeue->push_back(formula);
 				
@@ -1271,6 +1418,9 @@ class MemoryUtil{
 								//if(!isIn(freshform,queue)&&!isIn(freshform,dequeue)){
 									if(!freshform.is_quantifier()){
 										queue->push_back(freshform);
+									}
+									if(z3Coding.equal((2>=c.int_const("i__prime")),freshform)||z3Coding.equal((c.int_const("i__prime")>=2),freshform)){
+										std::cout<<toString(freshformulas)<<std::endl;
 									}
 									closureformulas->push_back(freshform);
 									exprMapAdd(freshform,closureformulasMap);
@@ -1300,6 +1450,9 @@ class MemoryUtil{
 									if(!freshform.is_quantifier()){
 										queue->push_back(freshform);
 									}
+									if(z3Coding.equal((2>=c.int_const("i__prime")),freshform)||z3Coding.equal((c.int_const("i__prime")>=2),freshform)){
+										std::cout<<toString(freshformulas)<<std::endl;
+									}
 									closureformulas->push_back(freshform);
 									exprMapAdd(freshform,closureformulasMap);
 								//}
@@ -1317,6 +1470,9 @@ class MemoryUtil{
 								if(!freshform.is_quantifier()){
 										queue->push_back(freshform);
 								}
+								if(z3Coding.equal((2>=c.int_const("i__prime")),freshform)||z3Coding.equal((c.int_const("i__prime")>=2),freshform)){
+										std::cout<<toString(freshformulas)<<std::endl;
+								}
 								closureformulas->push_back(freshform);
 								exprMapAdd(freshform,closureformulasMap);
 //								if(!isIn(freshform,closureformulas)){
@@ -1332,6 +1488,9 @@ class MemoryUtil{
 							for(expr freshform: *freshformulas){
 								if(!freshform.is_quantifier()){
 										queue->push_back(freshform);
+								}
+								if(z3Coding.equal((2>=c.int_const("i__prime")),freshform)||z3Coding.equal((c.int_const("i__prime")>=2),freshform)){
+										std::cout<<toString(freshformulas)<<std::endl;
 								}
 								closureformulas->push_back(freshform);
 								exprMapAdd(freshform,closureformulasMap);
@@ -1349,6 +1508,9 @@ class MemoryUtil{
 								if(!freshform.is_quantifier()){
 										queue->push_back(freshform);
 								}
+								if(z3Coding.equal((2>=c.int_const("i__prime")),freshform)||z3Coding.equal((c.int_const("i__prime")>=2),freshform)){
+										std::cout<<toString(freshformulas)<<std::endl;
+								}
 								closureformulas->push_back(freshform);
 								exprMapAdd(freshform,closureformulasMap);
 //								if(!isIn(freshform,closureformulas)){
@@ -1360,8 +1522,8 @@ class MemoryUtil{
 				}
 
 			}
-			/*std::cout<<"----------------closureformulas-----------------------"<<std::endl;
-			std::cout<<toString(closureformulas)<<std::endl;*/
+			//std::cout<<"----------------closureformulas-----------------------"<<std::endl;
+			//std::cout<<toString(closureformulas)<<std::endl;*/
 			return closureformulas;
 		}
 		
@@ -2320,7 +2482,16 @@ class MemoryUtil{
 			}
 			return filteringResult;
 		}
-		
+		vector<expr> * filtering(vector<expr> * formulas, expr e){
+			vector<expr> * filteringResult=new vector<expr>();
+			for(expr f: *formulas){
+				vector<expr> * cons=z3Coding.getConsts(f);
+				if(isIn(e,cons)){
+					filteringResult->push_back(f);
+				}
+			}
+			return filteringResult;
+		}
 		expr meet(vector<expr> *Pre,expr e1,expr e2){
 
 			if(z3Coding.isPhiFormula(e1)&&z3Coding.isPhiFormula(e2)){
@@ -2334,6 +2505,9 @@ class MemoryUtil{
 			}
 			else if(z3Coding.isPhiFormula(e1)&&z3Coding.isSimpleFormula(e2)){
 				return z3Coding._error;
+			}
+			else if(z3Coding.isOrFormula(e1)&&z3Coding.isOrFormula(e2)){
+				return meetOrFormula_OrFormula(e1,e2);
 			}
 			else if(z3Coding.isSimpleFormula(e1)&&z3Coding.isPhiFormula(e2)){
 				return z3Coding._error;
@@ -2420,9 +2594,9 @@ class MemoryUtil{
 
 				if(quantifierBeginFormula1.decl().name().str()=="<"&&quantifierBeginFormula2.decl().name().str()=="<"){
 					expr assert1=quantifierBegin1<=quantifierBegin2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierBegin2<=quantifierBegin1;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					if(r1==proved_result::proved){
 						meetQuantifierBeginFormula=quantifierBegin2<quantifier1;
 					}
@@ -2435,11 +2609,11 @@ class MemoryUtil{
 				}
 				else if(quantifierBeginFormula1.decl().name().str()=="<"&&quantifierBeginFormula2.decl().name().str()=="<="){
 					expr assert1=quantifierBegin1<quantifierBegin2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierBegin1<=quantifierBegin2;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					expr assert3=quantifierBegin2<=quantifierBegin1;
-					proved_result r3=z3Coding.prove(Pre,assert3);
+					proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 					if(r1==proved_result::proved){
 						meetQuantifierBeginFormula=quantifierBegin2<=quantifier1;
 					}
@@ -2455,11 +2629,11 @@ class MemoryUtil{
 				}
 				else if(quantifierBeginFormula1.decl().name().str()=="<="&&quantifierBeginFormula2.decl().name().str()=="<"){
 					expr assert1=quantifierBegin1<=quantifierBegin2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierBegin2<quantifierBegin1;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					expr assert3=quantifierBegin2<=quantifierBegin1;
-					proved_result r3=z3Coding.prove(Pre,assert3);
+					proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 					if(r1==proved_result::proved){
 						meetQuantifierBeginFormula=quantifierBegin2<quantifier1;
 					}
@@ -2475,9 +2649,9 @@ class MemoryUtil{
 				} 
 				else if(quantifierBeginFormula1.decl().name().str()=="<="&&quantifierBeginFormula2.decl().name().str()=="<="){
 					expr assert1=quantifierBegin1<=quantifierBegin2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierBegin2<=quantifierBegin1;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					if(r1==proved_result::proved){
 						meetQuantifierBeginFormula=quantifierBegin2<=quantifier1;
 					}
@@ -2492,9 +2666,9 @@ class MemoryUtil{
 
 				if(quantifierEndFormula1.decl().name().str()=="<"&&quantifierEndFormula2.decl().name().str()=="<"){
 					expr assert1=quantifierEnd1<=quantifierEnd2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierEnd2<=quantifierEnd1;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					if(r1==proved_result::proved){
 						meetQuantifierEndFormula=quantifier1<quantifierEnd1;
 					}
@@ -2507,11 +2681,11 @@ class MemoryUtil{
 				}
 				else if(quantifierEndFormula1.decl().name().str()=="<"&&quantifierEndFormula2.decl().name().str()=="<="){
 					expr assert1=quantifierEnd1<=quantifierEnd2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierEnd2<quantifierEnd1;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					expr assert3=quantifierEnd2<quantifierEnd1;
-					proved_result r3=z3Coding.prove(Pre,assert3);
+					proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 					if(r1==proved_result::proved){
 						meetQuantifierEndFormula=quantifier1<quantifierEnd1;
 					}
@@ -2527,11 +2701,11 @@ class MemoryUtil{
 				}
 				else if(quantifierEndFormula1.decl().name().str()=="<="&&quantifierEndFormula2.decl().name().str()=="<"){
 					expr assert1=quantifierEnd1<quantifierEnd2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierEnd1<=quantifierEnd2;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					expr assert3=quantifierEnd2<=quantifierEnd1;
-					proved_result r3=z3Coding.prove(Pre,assert3);
+					proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 					if(r1==proved_result::proved){
 						meetQuantifierEndFormula=quantifier1<=quantifierEnd1;
 					}
@@ -2547,9 +2721,9 @@ class MemoryUtil{
 				} 
 				else if(quantifierEndFormula1.decl().name().str()=="<="&&quantifierEndFormula2.decl().name().str()=="<="){
 					expr assert1=quantifierEnd1<=quantifierEnd2;
-					proved_result r1=z3Coding.prove(Pre,assert1);
+					proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 					expr assert2=quantifierEnd2<=quantifierEnd1;
-					proved_result r2=z3Coding.prove(Pre,assert2);
+					proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 					if(r1==proved_result::proved){
 						meetQuantifierEndFormula=quantifier1<=quantifierEnd1;
 					}
@@ -2589,15 +2763,17 @@ class MemoryUtil{
 						meetQuantifierBeginFormula=quantifierBegin1<quantifier1;
 					}
 					else{
+					
 						meetQuantifierBeginFormula=quantifierBegin1<=quantifier1;
 					}
 					
 					if(quantifierEndFormula1.decl().name().str()=="<"&&quantifierEndFormula2.decl().name().str()=="<"){
 						expr assert1=quantifierEnd1<=quantifierEnd2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierEnd2<=quantifierEnd1;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						if(r1==proved_result::proved){
+							
 							meetQuantifierEndFormula=quantifier1<quantifierEnd1;
 						}
 						else if(r2==proved_result::proved){
@@ -2609,11 +2785,11 @@ class MemoryUtil{
 					}
 					else if(quantifierEndFormula1.decl().name().str()=="<"&&quantifierEndFormula2.decl().name().str()=="<="){
 						expr assert1=quantifierEnd1<=quantifierEnd2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierEnd2<quantifierEnd1;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						expr assert3=quantifierEnd2<quantifierEnd1;
-						proved_result r3=z3Coding.prove(Pre,assert3);
+						proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 						if(r1==proved_result::proved){
 							meetQuantifierEndFormula=quantifier1<quantifierEnd1;
 						}
@@ -2629,11 +2805,11 @@ class MemoryUtil{
 					}
 					else if(quantifierEndFormula1.decl().name().str()=="<="&&quantifierEndFormula2.decl().name().str()=="<"){
 						expr assert1=quantifierEnd1<quantifierEnd2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierEnd1<=quantifierEnd2;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						expr assert3=quantifierEnd2<=quantifierEnd1;
-						proved_result r3=z3Coding.prove(Pre,assert3);
+						proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 						if(r1==proved_result::proved){
 							meetQuantifierEndFormula=quantifier1<=quantifierEnd1;
 						}
@@ -2649,9 +2825,9 @@ class MemoryUtil{
 					} 
 					else if(quantifierEndFormula1.decl().name().str()=="<="&&quantifierEndFormula2.decl().name().str()=="<="){
 						expr assert1=quantifierEnd1<=quantifierEnd2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierEnd2<=quantifierEnd1;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						if(r1==proved_result::proved){
 							meetQuantifierEndFormula=quantifier1<=quantifierEnd1;
 						}
@@ -2665,8 +2841,6 @@ class MemoryUtil{
 
 				}
 				assert=step1<0;
-				expr meetQuantifierEndFormula(c);
-				expr meetQuantifierBeginFormula(c);
 				if(z3Coding.prove(assert)==proved_result::proved){
 					if(!z3Coding.equal(quantifierEnd1,quantifierEnd2)){
 						return z3Coding._error;
@@ -2681,9 +2855,9 @@ class MemoryUtil{
 					
 					if(quantifierBeginFormula1.decl().name().str()=="<"&&quantifierBeginFormula2.decl().name().str()=="<"){
 						expr assert1=quantifierBegin1<=quantifierBegin2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierBegin2<=quantifierBegin1;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						if(r1==proved_result::proved){
 							meetQuantifierBeginFormula=quantifierBegin2<quantifier1;
 							
@@ -2697,11 +2871,11 @@ class MemoryUtil{
 					}
 					else if(quantifierBeginFormula1.decl().name().str()=="<"&&quantifierBeginFormula2.decl().name().str()=="<="){
 						expr assert1=quantifierBegin1<quantifierBegin2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierBegin1<=quantifierBegin2;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						expr assert3=quantifierBegin2<=quantifierBegin1;
-						proved_result r3=z3Coding.prove(Pre,assert3);
+						proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 						if(r1==proved_result::proved){
 							meetQuantifierBeginFormula=quantifierBegin2<=quantifier1;
 						}
@@ -2717,11 +2891,11 @@ class MemoryUtil{
 					}
 					else if(quantifierBeginFormula1.decl().name().str()=="<="&&quantifierBeginFormula2.decl().name().str()=="<"){
 						expr assert1=quantifierBegin1<=quantifierBegin2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierBegin2<quantifierBegin1;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						expr assert3=quantifierBegin2<=quantifierBegin1;
-						proved_result r3=z3Coding.prove(Pre,assert3);
+						proved_result r3=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert3);
 						if(r1==proved_result::proved){
 							meetQuantifierBeginFormula=quantifierBegin2<quantifier1;
 						}
@@ -2737,9 +2911,9 @@ class MemoryUtil{
 					} 
 					else if(quantifierBeginFormula1.decl().name().str()=="<="&&quantifierBeginFormula2.decl().name().str()=="<="){
 						expr assert1=quantifierBegin1<=quantifierBegin2;
-						proved_result r1=z3Coding.prove(Pre,assert1);
+						proved_result r1=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert1);
 						expr assert2=quantifierBegin2<=quantifierBegin1;
-						proved_result r2=z3Coding.prove(Pre,assert2);
+						proved_result r2=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert2);
 						if(r1==proved_result::proved){
 							meetQuantifierBeginFormula=quantifierBegin2<=quantifier1;
 						}
@@ -2751,7 +2925,6 @@ class MemoryUtil{
 						}
 					}
 				}
-				
 				if(!z3Coding.checkError(bodyMeetResult)&&!z3Coding.checkError(meetQuantifierBeginFormula)
 						&&!z3Coding.checkError(meetQuantifierEndFormula)){
 					if(!z3Coding.checkError(quantifierExtendFormula1)&&!z3Coding.checkError(quantifierExtendFormula2)){
@@ -2776,7 +2949,7 @@ class MemoryUtil{
 			}
 			else{
 				expr assert=e<0;
-				proved_result r=z3Coding.prove(Pre,assert);
+				proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 				if(r==proved_result::proved){
 					return true;
 				}
@@ -2822,7 +2995,7 @@ class MemoryUtil{
 						//[indexInit,...  (quantifierbegin,... 
 
 						expr assert=indexInit<=quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(quantifierbegin,...
@@ -2831,7 +3004,7 @@ class MemoryUtil{
 					}
 					if(!isBeginProved){
 						expr assert=indexInit>quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//[indexInit,...
@@ -2840,7 +3013,7 @@ class MemoryUtil{
 					}
 					if(!isBeginProved){
 						expr assert=indexInit>=quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(indexInit,...
@@ -2854,7 +3027,7 @@ class MemoryUtil{
 						//[indexInit,...  [quantifierbegin,... 
 						expr assert=indexInit<=quantifierBegin;
 						//std::cout<<assert<<std::endl;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(quantifierbegin,...
@@ -2863,7 +3036,7 @@ class MemoryUtil{
 					}
 					if(!isBeginProved){
 						expr assert=indexInit>=quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(indexInit,...
@@ -2880,7 +3053,7 @@ class MemoryUtil{
 					if(!isEndProved){
 						//...,index)  ..., quantifierEnd) 
 						expr assert=index>=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							// ..., quantifierEnd) 
@@ -2889,7 +3062,7 @@ class MemoryUtil{
 					}
 					if(!isEndProved){
 						expr assert=index<=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							//...,index)
@@ -2902,7 +3075,7 @@ class MemoryUtil{
 					if(!isEndProved){
 						//...,index)  ..., quantifierEnd] 
 						expr assert=index>quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							// ..., quantifierEnd] 
@@ -2912,7 +3085,7 @@ class MemoryUtil{
 					if(!isEndProved){
 						//...,index)  ..., quantifierEnd] 
 						expr assert=index>=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							// ..., quantifierEnd] 
@@ -2921,7 +3094,7 @@ class MemoryUtil{
 					}
 					if(!isEndProved){
 						expr assert=index<=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							//...,index)
@@ -2957,7 +3130,7 @@ class MemoryUtil{
 						//[indexInit,...  (quantifierbegin,... 
 
 						expr assert=index<=quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(quantifierbegin,...
@@ -2966,7 +3139,7 @@ class MemoryUtil{
 					}
 					if(!isBeginProved){
 						expr assert=index>quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//[indexInit,...
@@ -2975,7 +3148,7 @@ class MemoryUtil{
 					}
 					if(!isBeginProved){
 						expr assert=index>=quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(indexInit,...
@@ -2989,7 +3162,7 @@ class MemoryUtil{
 						//[indexInit,...  [quantifierbegin,... 
 						expr assert=index<=quantifierBegin;
 						//std::cout<<assert<<std::endl;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(quantifierbegin,...
@@ -2998,7 +3171,7 @@ class MemoryUtil{
 					}
 					if(!isBeginProved){
 						expr assert=index>=quantifierBegin;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isBeginProved=true;
 							//(indexInit,...
@@ -3015,7 +3188,7 @@ class MemoryUtil{
 					if(!isEndProved){
 						//...,index)  ..., quantifierEnd) 
 						expr assert=indexInit>=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							// ..., quantifierEnd) 
@@ -3024,7 +3197,7 @@ class MemoryUtil{
 					}
 					if(!isEndProved){
 						expr assert=indexInit<=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							//...,index)
@@ -3037,7 +3210,7 @@ class MemoryUtil{
 					if(!isEndProved){
 						//...,index)  ..., quantifierEnd] 
 						expr assert=indexInit>quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							// ..., quantifierEnd] 
@@ -3047,7 +3220,7 @@ class MemoryUtil{
 					if(!isEndProved){
 						//...,index)  ..., quantifierEnd] 
 						expr assert=indexInit>=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							// ..., quantifierEnd] 
@@ -3056,7 +3229,7 @@ class MemoryUtil{
 					}
 					if(!isEndProved){
 						expr assert=indexInit<=quantifierEnd;
-						proved_result r=z3Coding.prove(Pre,assert);
+						proved_result r=z3Coding.prove(z3Coding.filteringLeftNonForAllFormula(Pre),assert);
 						if(r==proved_result::proved){
 							isEndProved=true;
 							//...,index)
@@ -3085,22 +3258,13 @@ class MemoryUtil{
 		}
 		expr meetSimpleFormula_SimpleFormula(expr simpleFormula1,expr simpleFormula2){
 			expr result=z3Coding.meet(simpleFormula1,simpleFormula2);
-			//std::cout<<result<<std::endl;
-//12.30 modify
-			if(!z3Coding.isOrFormula(simpleFormula1)&&!z3Coding.isOrFormula(simpleFormula2)){
-				if(result.is_app()&&result.decl().name().str()=="or"){
-					return z3Coding._error;
-				}
-				return z3Coding.simplify(result);
+			return result;
+		}
+		expr meetOrFormula_OrFormula(expr orFormula1,expr orFormula2) {
+			if(z3Coding.imply(orFormula1,orFormula2)&&z3Coding.imply(orFormula2,orFormula1)){
+				return orFormula1;
 			}
-			else{
-				if(z3Coding.morePower_equal(result,simpleFormula1)||z3Coding.morePower_equal(result,simpleFormula2)){
-					return z3Coding.simplify(result);
-				}
-				else{
-					return z3Coding._error;
-				}
-			}
+			return z3Coding._error;
 		}
 		
 		

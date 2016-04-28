@@ -1,0 +1,25 @@
+bubblesort.cpp
+time: 1 s
+blockCount : 11 
+forall formula: 0 
+simple formula: 22 
+bubblesort_unsafe.cpp
+time: 1 s
+blockCount : 11 
+forall formula: 0 
+simple formula: 22 
+bubblesort_unsafe2.cpp
+time: 1 s
+blockCount : 11 
+forall formula: 0 
+simple formula: 22 
+selectionsort.cpp
+time: 6 s
+blockCount : 14 
+forall formula: 0 
+simple formula: 46 
+selectionsort_unsafe.cpp
+time: 5 s
+blockCount : 14 
+forall formula: 0 
+simple formula: 46 

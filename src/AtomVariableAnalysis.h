@@ -37,7 +37,6 @@ public:
 		}
 		return false;
 	}
-	
 
 	AtomVariabla(context &ctx,Z3Coding &coding, const clang::Stmt *indexInitStmt):c(ctx),z3coding(coding),scalaVarz3coding(c)
 				,stepz3coding(c),indexInitStmtz3coding(c),initz3coding(c),indexUpdateStmtz3coding(c){
@@ -45,6 +44,18 @@ public:
 		indexUpdateStmts=new vector<const clang::Stmt*>();
 		vector<expr> * tmp=z3coding.boolSortFiltering(z3coding.clangStmtToZ3Expr(indexInitStmt));
 		indexInitStmtz3coding=tmp->front();
+		scalaVarz3coding=z3coding.unprime(indexInitStmtz3coding.arg(0));
+		initz3coding=indexInitStmtz3coding.arg(1);
+		
+	}
+	AtomVariabla(context &ctx,Z3Coding &coding, const clang::Stmt *indexInitStmt,expr indexInitZ3code)
+	:c(ctx),z3coding(coding),scalaVarz3coding(c)
+				,stepz3coding(c),indexInitStmtz3coding(c),initz3coding(c),indexUpdateStmtz3coding(c){
+		this->indexInitStmt=indexInitStmt;
+		indexUpdateStmts=new vector<const clang::Stmt*>();
+		//vector<expr> * tmp=z3coding.boolSortFiltering(z3coding.clangStmtToZ3Expr(indexInitStmt));
+		//indexInitStmtz3coding=tmp->front();
+		indexInitStmtz3coding=indexInitZ3code;
 		scalaVarz3coding=z3coding.unprime(indexInitStmtz3coding.arg(0));
 		initz3coding=indexInitStmtz3coding.arg(1);
 		
@@ -66,6 +77,20 @@ public:
 			vector<expr> *tmp=z3coding.clangStmtToZ3Expr(indexUpdateStmt);
 			tmp=z3coding.boolSortFiltering(tmp);
 			this->indexUpdateStmtz3coding=tmp->at(0);
+			stepz3coding=getStepFromIndexUpdate(indexUpdateStmtz3coding);
+		}
+	}
+	void addIndexUpdateStmt(const clang::Stmt* indexUpdateStmt,expr indexUpdateExpr){
+		if(indexUpdateStmts->size()!=0){
+			if(!isIn(indexUpdateStmt,indexUpdateStmts)){
+				indexUpdateStmts->push_back(indexUpdateStmt);
+			}
+		}
+		else{
+			indexUpdateStmts->push_back(indexUpdateStmt);
+			//vector<expr> *tmp=z3coding.clangStmtToZ3Expr(indexUpdateStmt);
+			//tmp=z3coding.boolSortFiltering(tmp);
+			this->indexUpdateStmtz3coding=indexUpdateExpr;
 			stepz3coding=getStepFromIndexUpdate(indexUpdateStmtz3coding);
 		}
 	}
@@ -110,7 +135,7 @@ public:
 		return indexInitStmt==InitStmt;
 	}
 	bool equal(Property *p){
-		AtomVariabla * av=(AtomVariabla *)p;
+		/*AtomVariabla * av=(AtomVariabla *)p;
 		if(this->indexInitStmt!=av->indexInitStmt){
 			return false;
 		}
@@ -122,7 +147,8 @@ public:
 				return false;
 			}
 		}
-		return true;
+		return true;*/
+		return p==this;
 	}
 	std::string toString(){
 		std::string ret="init Stmt: ";
@@ -150,6 +176,32 @@ class AtomVariablaAnalysis: public IntraDataFlowAnalysis{
 	ValueListSet universalSet;
 	context &c;
 	Z3Coding &z3coding;
+	/*if exist atomic scalar at a point,then we backfill that, at init of the atom scalar, it's step is what */
+	void backfill(){
+		for (map<const clang::Stmt*, FlowSet*>::iterator it=mapToStmtOut.begin(); it!=mapToStmtOut.end(); ++it){
+			FlowSet * out=it->second;
+			ValueListSet* vlsOut=(ValueListSet*)out;
+			for(Property* p: vlsOut->elements){
+				AtomVariabla * av=(AtomVariabla *)p;
+				if(av->hasStep()){
+					if(mapToStmtOut.count(av->indexInitStmt)<=0){
+						continue;
+					}
+					FlowSet* out=mapToStmtOut.at(av->indexInitStmt);
+					ValueListSet* vlsOut=(ValueListSet*)out;
+					for(Property* p: vlsOut->elements){
+						AtomVariabla * avx=(AtomVariabla *)p;
+						if(avx->indexInitStmt==av->indexInitStmt&&!avx->hasStep()){
+							for(const clang::Stmt* updateStmt:*av->indexUpdateStmts)
+							avx->addIndexUpdateStmt(updateStmt);
+						}
+					}
+				}
+			}
+		}
+
+	}
+	
 public:
 	map<const clang::Stmt*, FlowSet*> mapToStmtIn;
 	map<const clang::Stmt*, FlowSet*> mapToStmtOut;
@@ -177,6 +229,7 @@ public:
 	AtomVariablaAnalysis(clang::CFG* cfg,context &ctx,Z3Coding &coding):IntraDataFlowAnalysis(cfg),c(ctx),z3coding(coding){
 		pre_init();
 		doAnalysis();
+		backfill();
 	}
 	~AtomVariablaAnalysis(){}
 	FlowSet * newinitialFlow(){
@@ -268,69 +321,77 @@ public:
 		}
 		return false;
 	}
+	
 	FlowSet * GenAndKill(FlowSet * Pre,const Stmt* s){
 		FlowSet * ret=new ValueListSet();
 		vector<expr> * tmp=z3coding.clangStmtToZ3Expr(s);
-		tmp=z3coding.boolSortFiltering(tmp);
-		if(tmp->size()<=0){
+		if(tmp==nullptr){
 			return ret;
 		}
-		expr z3Stmt=tmp->at(0);
-		//kill
-		ValueListSet* vlsPre=(ValueListSet*) Pre;
-		if(isAssigndToScaleVariable(z3Stmt)){
-			expr scalaVar=z3coding.unprime(z3Stmt.arg(0));
-			for(Property *p:vlsPre->elements){
-				AtomVariabla * av=(AtomVariabla *)p;
-				vector<expr>* initStmtConsts=z3coding.getConsts(z3coding.unprimedDecline((av->indexInitStmtz3coding)));
-				vector<expr>* updateStmtConsts=new vector<expr>();
-				if(av->hasStep()){
-					updateStmtConsts=z3coding.getConsts(z3coding.unprimedDecline((av->indexUpdateStmtz3coding)));
-				}
-				if(z3coding.isIn(scalaVar,initStmtConsts)||z3coding.isIn(scalaVar,updateStmtConsts)){
-					//kill p
-					//do nothing
-				}
-				else{
-					ret->add(av->clone());
-				}
-			}
+		tmp=z3coding.boolSortFiltering(tmp);
+		if(tmp->size()<=0){
+			ret->Union(Pre);
+			return ret;
 		}
-		else{
-			ret=Pre->clone();
-		}
-		
-		//gen
-		if(isAssigndToScaleVariable(z3Stmt)){
-			expr scalaVar=z3coding.unprime(z3Stmt.arg(0));
-			if(isAtomInitStmt(z3Stmt)){
-				AtomVariabla* av=new AtomVariabla(c,z3coding,s);
-			#ifdef _DEBUG	
-				std::cout<<"gen: "<< av->toString()<<std::endl;
-			#endif
-				ret->add(av);
-			}
-			else if(isAtomUpdateStmt(z3Stmt)){
+		for(unsigned i=0;i<tmp->size();i++){
+			expr z3Stmt=tmp->at(i);
+			//kill
+			ValueListSet* vlsPre=(ValueListSet*) Pre;
+			if(isAssigndToScaleVariable(z3Stmt)){
+				expr scalaVar=z3coding.unprime(z3Stmt.arg(0));
 				for(Property *p:vlsPre->elements){
-					AtomVariabla *av=(AtomVariabla *)p;
-					if(av->checkScalaVaribale(scalaVar)){
-						if(av->hasStep()){
-							if(av->checkUpdateStmt(z3Stmt)){
-								ret->add(av->clone());
+					AtomVariabla * av=(AtomVariabla *)p;
+				
+					vector<expr>* initStmtConsts=z3coding.getConsts(z3coding.unprimedDecline((av->indexInitStmtz3coding)));
+					vector<expr>* updateStmtConsts=new vector<expr>();
+					if(av->hasStep()){
+						updateStmtConsts=z3coding.getConsts(z3coding.unprimedDecline((av->indexUpdateStmtz3coding)));
+					}
+					if(z3coding.isIn(scalaVar,initStmtConsts)||z3coding.isIn(scalaVar,updateStmtConsts)){
+						//kill p
+						//do nothing
+					}
+					else{
+						ret->add(av->clone());
+					}
+				}
+			}
+			else{
+				ret=Pre->clone();
+			}
+		
+			//gen
+			if(isAssigndToScaleVariable(z3Stmt)){
+				expr scalaVar=z3coding.unprime(z3Stmt.arg(0));
+				if(isAtomInitStmt(z3Stmt)){
+					AtomVariabla* av=new AtomVariabla(c,z3coding,s);
+				#ifdef _DEBUG	
+					std::cout<<"gen: "<< av->toString()<<std::endl;
+				#endif
+					ret->add(av);
+				}
+				else if(isAtomUpdateStmt(z3Stmt)){
+					for(Property *p:vlsPre->elements){
+						AtomVariabla *av=(AtomVariabla *)p;
+						if(av->checkScalaVaribale(scalaVar)){
+							if(av->hasStep()){
+								if(av->checkUpdateStmt(z3Stmt)){
+									ret->add(av->clone());
+								#ifdef _DEBUG	
+									std::cout<<"gen: "<< av->toString()<<std::endl;
+								#endif
+								
+								}
+							}
+							else{
+								av=av->clone();
+								av->addIndexUpdateStmt(s);
+								ret->add(av);
 							#ifdef _DEBUG	
 								std::cout<<"gen: "<< av->toString()<<std::endl;
 							#endif
-								return ret;
+							
 							}
-						}
-						else{
-							av=av->clone();
-							av->addIndexUpdateStmt(s);
-							ret->add(av);
-						#ifdef _DEBUG	
-							std::cout<<"gen: "<< av->toString()<<std::endl;
-						#endif
-							return ret;
 						}
 					}
 				}
@@ -338,6 +399,7 @@ public:
 		}
 		return ret;
 	}
+	
 	void flowThrouth(CFGBlock*&n, FlowSet *&in, list<pair<CFGBlock*,FlowSet*>*> *&outs){
 		for(auto it=outs->begin();it != outs->end(); it++){
 			pair<CFGBlock*,FlowSet*>* ele=*it;
@@ -400,6 +462,15 @@ public:
 			to=from->clone();
 		}
 		
+	}
+	bool equal(FlowSet  *&from,FlowSet  *&to){
+		if(from==&universalSet) {
+			return to==&universalSet;
+		}
+		if(to==&universalSet) {
+			return from==&universalSet;
+		}
+		return from->equal(to);
 	}
 //	FlowSet* clone(FlowSet  * from){
 //		ValueListSet* vls=new ValueListSet();
