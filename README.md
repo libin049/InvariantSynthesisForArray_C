@@ -1,7 +1,5 @@
 # InvariantSynthesisForArray_C
 
-this is the tool for &quot;Automatic Invariant Synthesis for Arrays in Simple Programs&quot;.
-
 We offer a binares file, which can be executed in ubuntu 64bit(&gt;= 14.04). 
 
 <b>Execute:</b>
